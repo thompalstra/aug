@@ -1,7 +1,7 @@
 <?php
 return [
-  "/" => "site/home"
+  "/" => "site/home",
+  "/contact" => "site/contact",
   "/blog" => "blog/index",
-  "/blog/<slug:(.*)>" => "blog/view", // /blog/het-heetste-nieuws
-  "<slug:(.*)>" => "/page/view" // /test/best
+  "/blog/<slug:(.*)>" => "blog/view",
 ];

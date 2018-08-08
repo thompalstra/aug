@@ -4,7 +4,9 @@ return [
     "controllerClass" => "\\aug\\web\\Controller",
     "actionClass" => "\\aug\\web\\Action",
     "requestClass" => "\\aug\\web\\Request",
-    "default" => "/site/home"
+    "viewClass" => "\\aug\\web\\View",
+    "default" => "site/home",
+    "layout" => "main",
   ],
   "db" => [
     "connection" => [
@@ -15,6 +17,7 @@ return [
   ],
   "sites" => [
     "backend.localhost" => "backend",
-    "localhost" => "main"
+    "localhost" => "main",
+    "plain" => "plain"
   ]
 ];

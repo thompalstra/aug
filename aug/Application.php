@@ -1,14 +1,14 @@
 <?php
 class Application{
   public function __construct($options = []){
-    $this->root = dirname(__DIR__);
+    $this->root = dirname(__DIR__) . DIRECTORY_SEPARATOR;
     $this->ds = DIRECTORY_SEPARATOR;
 
     $this->loadConfig($this->getConfig("common"));
     $this->loadRoutes($this->getRoutes("common"));
   }
   protected function getConfig($config){
-    $fp = "{$this->root}{$this->ds}{$config}{$this->ds}config{$this->ds}config.php";
+    $fp = "{$this->root}{$config}{$this->ds}config{$this->ds}config.php";
     if(file_exists($fp)){
       return include $fp;
     }
@@ -20,14 +20,40 @@ class Application{
     }
   }
   protected function getRoutes($config){
-    $fp = "{$this->root}{$this->ds}{$config}{$this->ds}config{$this->ds}config.php";
+    $fp = "{$this->root}{$config}{$this->ds}config{$this->ds}routes.php";
     if(file_exists($fp)){
       return include $fp;
     }
     return [];
   }
   protected function loadRoutes($data){
-    $this->routes = $data;
+    foreach($data as $k => $v){
+      $this->routes[$k] = $v;
+    }
+  }
+  protected function getEnvironmentConfig($config){
+    $fp = "{$this->root}{$config}{$this->ds}config{$this->ds}config.php";
+    if(file_exists($fp)){
+      return include $fp;
+    }
+    return [];
+  }
+  protected function loadEnvironmentConfig($data){
+    foreach($data as $k => $v){
+      $this->$k = $v;
+    }
+  }
+  protected function getEnvironmentRoutes($config){
+    $fp = "{$this->root}{$config}config{$this->ds}routes.php";
+    if(file_exists($fp)){
+      return include $fp;
+    }
+    return [];
+  }
+  protected function loadEnvironmentRoutes($data){
+    foreach($data as $k => $v){
+      $this->routes[$k] = $v;
+    }
   }
   public static function init(){
     include("autoloader.php");
@@ -37,6 +63,16 @@ class Application{
   }
   public function prepare(){
     $this->environment = \aug\web\Environment::parseRequest($_SERVER["HTTP_HOST"]);
+
+    $this->loadEnvironmentConfig($this->getEnvironmentConfig($this->environment->relativePath));
+    $this->loadEnvironmentRoutes($this->getEnvironmentRoutes($this->environment->relativePath));
+
+    $controllerClass = \Aug::$app->web["controllerClass"];
+    $actionClass = Aug::$app->web["actionClass"];
+    // Aug::$app->controller = $controllerClass::parseRequest(\Aug::$app->web["default"]);
+    // Aug::$app->action = $controllerClass::parseRequest(\Aug::$app->web["default"]);
+    Aug::$app->controller = new $controllerClass();
+    Aug::$app->action = new $actionClass("home", []);
     return $this;
   }
   public function run(){
@@ -45,13 +81,11 @@ class Application{
     $actionClass = Aug::$app->web["actionClass"];
     $requestClass = Aug::$app->web["requestClass"];
 
-    // $route = $controllerClass::handleRequest($_SERVER["REQUEST_URI"]);
-
     $route = $requestClass::handleRequest($_SERVER["REQUEST_URI"]);
 
-    $controller = $controllerClass::parseRequest($route);
-    $action = $actionClass::parseRequest($route);
+    Aug::$app->controller = $controllerClass::parseRequest($route);
+    Aug::$app->action = $actionClass::parseRequest($route);
 
-    var_dump($action, $controller); die;
+    Aug::$app->controller->runAction(Aug::$app->action);
   }
 }
