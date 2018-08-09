@@ -1,6 +1,6 @@
 <?php
 return [
-  "/" => "site/home",
+  "/" => "site/index",
   "/contact" => "site/contact",
   "/blog" => "blog/index",
   "/blog/<slug:(.*)>" => "blog/view",

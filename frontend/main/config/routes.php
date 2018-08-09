@@ -1,5 +1,5 @@
 <?php
 return [
-  "/" => "site/home",
+  "/" => "site/index",
   // "/blog" => "custom/blog"
 ];

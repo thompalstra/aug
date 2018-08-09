@@ -5,7 +5,7 @@ return [
     "actionClass" => "\\aug\\web\\Action",
     "requestClass" => "\\aug\\web\\Request",
     "viewClass" => "\\aug\\web\\View",
-    "default" => "site/home",
+    "default" => "site/index",
     "layout" => "main",
   ],
   "db" => [

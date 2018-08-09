@@ -62,6 +62,9 @@ class Application{
     return Aug::$app;
   }
   public function prepare(){
+
+    \aug\db\Connection::initialize('mysql:host=localhost;dbname=query_db', "root", "");
+
     $this->environment = \aug\web\Environment::parseRequest($_SERVER["HTTP_HOST"]);
 
     $this->loadEnvironmentConfig($this->getEnvironmentConfig($this->environment->relativePath));
@@ -69,10 +72,9 @@ class Application{
 
     $controllerClass = \Aug::$app->web["controllerClass"];
     $actionClass = Aug::$app->web["actionClass"];
-    // Aug::$app->controller = $controllerClass::parseRequest(\Aug::$app->web["default"]);
-    // Aug::$app->action = $controllerClass::parseRequest(\Aug::$app->web["default"]);
+
     Aug::$app->controller = new $controllerClass();
-    Aug::$app->action = new $actionClass("home", []);
+    Aug::$app->action = new $actionClass("index", []);
     return $this;
   }
   public function run(){
