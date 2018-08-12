@@ -4,6 +4,7 @@ class Connection{
   protected static $con;
   protected static $user;
   protected static $pass;
+  public static $dbh;
   public static $connection = [];
   /**
    * [this function should always be called statically with the correct params to globalize connection data]
@@ -16,6 +17,8 @@ class Connection{
     self::$user = $user;
     self::$pass = $pass;
 
+    self::createDbh();
+
     $data = [];
     foreach(explode(";", $con) as $line){
       $parts = explode("=", $line);
@@ -27,7 +30,7 @@ class Connection{
    * @return [PDO] [a PDO instance based on the current initialized settings]
    */
   public static function createDbh(){
-    return new \PDO(self::$con, self::$user, self::$pass);
+    self::$dbh = new \PDO(self::$con, self::$user, self::$pass);
   }
   /**
    * [getCon description]

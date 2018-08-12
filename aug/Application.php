@@ -70,7 +70,14 @@ class Application{
     $this->loadEnvironmentConfig($this->getEnvironmentConfig($this->environment->relativePath));
     $this->loadEnvironmentRoutes($this->getEnvironmentRoutes($this->environment->relativePath));
 
-    $controllerClass = \Aug::$app->web["controllerClass"];
+    $identityClass = Aug::$app->web["identityClass"];
+
+    session_start();
+
+    Aug::$app->identity = new $identityClass();
+    Aug::$app->identity->restore();
+
+    $controllerClass = Aug::$app->web["controllerClass"];
     $actionClass = Aug::$app->web["actionClass"];
 
     Aug::$app->controller = new $controllerClass();

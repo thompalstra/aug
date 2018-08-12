@@ -1,0 +1,14 @@
+html, body{
+  margin: 0; padding: 0;
+}
+.columns{
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+.columns .column{
+  flex: 1;
+}
+.columns .column.sidebar{
+  flex: 0 270px;
+}

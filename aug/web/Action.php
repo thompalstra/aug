@@ -1,9 +1,11 @@
 <?php
 namespace aug\web;
+use aug\helpers\FileHelper;
+use aug\helpers\ClassHelper;
 class Action implements ActionInterface{
   public function __construct($id, $params){
     $this->id = $id;
-    $this->name = self::parseActionName($this->id);
+    $this->name = "action" . ClassHelper::camelCase($this->id);
     $this->params = $params;
   }
   public static function parseRequest($request){
@@ -21,8 +23,5 @@ class Action implements ActionInterface{
       $id = $explode[count($explode)-1];
     }
     return new self($id, $request[1]);
-  }
-  public static function parseActionName($actionName){
-    return "action" . str_replace(" ", "", ucwords(str_replace("-"," ", $actionName)));
   }
 }

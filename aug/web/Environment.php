@@ -18,9 +18,9 @@ class Environment{
       $subdomain = $explode[0];
       $domain = $explode[1];
     }
-
-    if(isset(\Aug::$app->sites[$host])){
-      $environment->name = \Aug::$app->sites[$host];
+    // var_dump($subdomain, $domain); die;
+    if(isset(\Aug::$app->sites[$domain])){
+      $environment->name = \Aug::$app->sites[$domain];
       $environment->prefix = $subdomain;
       $environment->relativePath = $environment->prefix . DIRECTORY_SEPARATOR . $environment->name . DIRECTORY_SEPARATOR;
       $environment->absolutePath = \Aug::$app->root . $environment->relativePath;

@@ -59,16 +59,19 @@ class Query{
   public function all(){
     return $this->fetchAll($this->createCommand());
   }
+  public function exists(){
+    return $this->fetchExists($this->createCommand());
+  }
   public function columns(){
     return $this->fetchColumns($this->createCommand());
   }
   public function fetchColumns($command){
-    $sth = Connection::createDbh()->prepare($command);
+    $sth = Connection::$dbh->prepare($command);
     $sth->execute();
     return $sth->fetchAll(\PDO::FETCH_ASSOC);
   }
   public function fetchAll($command){
-    $sth = Connection::createDbh()->prepare($command);
+    $sth = Connection::$dbh->prepare($command);
     $sth->execute();
     if($this->className){
       $sth->setFetchMode(\PDO::FETCH_CLASS, $this->className, [
@@ -78,8 +81,13 @@ class Query{
     }
     return $sth->fetchAll();
   }
+  public function fetchExists($command){
+    $sth = Connection::$dbh->prepare($command);
+    $sth->execute();
+    return $sth->fetch() ? true : false;
+  }
   public function fetchOne($command){
-    $sth = Connection::createDbh()->prepare($command);
+    $sth = Connection::$dbh->prepare($command);
     $sth->execute();
     if($this->className){
       $sth->setFetchMode(\PDO::FETCH_CLASS, $this->className, [
@@ -95,8 +103,13 @@ class Query{
 
     $columns = "{$tableName} (" . self::createColumns($columns) . ")";
     $values = "VALUES (" . self::createValues($values) . ")";
-    $sth = Connection::createDbh()->prepare("INSERT IGNORE INTO {$columns} {$values}");
-    return $sth->execute();
+    $dbh = Connection::$dbh;
+    $sth = $dbh->prepare("INSERT IGNORE INTO {$columns} {$values}");
+    $sth->execute();
+    if($sth->rowCount()){
+      return $dbh->lastInsertId();
+    }
+    return null;
   }
   public function update($set, $where){
     $className = $this->className;
@@ -105,7 +118,7 @@ class Query{
     $set = "SET " . self::createSet($set);
     $where = "WHERE (" . self::createWhere($where) . ")";
 
-    $sth = Connection::createDbh()->prepare("UPDATE {$tableName} {$set} {$where}");
+    $sth = Connection::$dbh->prepare("UPDATE {$tableName} {$set} {$where}");
     return $sth->execute();
   }
   public function createCommand(){
@@ -141,6 +154,8 @@ class Query{
       return '"'.$value.'"';
     } else if(is_array($value)){
       return implode(",",$value);
+    } else if(is_bool($value)){
+      return ($value) ? 1 : 0;
     } else if($value == NULL){
       return 'NULL';
     }

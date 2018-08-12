@@ -5,6 +5,7 @@ return [
     "actionClass" => "\\aug\\web\\Action",
     "requestClass" => "\\aug\\web\\Request",
     "viewClass" => "\\aug\\web\\View",
+    "identityClass" => "\\common\\models\\User",
     "default" => "site/index",
     "layout" => "main",
   ],
@@ -16,8 +17,7 @@ return [
     ],
   ],
   "sites" => [
-    "backend.localhost" => "backend",
     "localhost" => "main",
-    "plain" => "plain"
+    "aug" => "main",
   ]
 ];
