@@ -8,6 +8,8 @@ class HtmlHelper{
         if($k == "style"){
           $style = self::createStyleAttributes($v);
           $opt[] = "{$k}='{$style}'";
+        } else if($k == "class"){
+          $opt[] = "{$k}='".implode(" ", $v)."'";
         } else {
           $json = self::createJsonAttributes($v);
           $opt[] = "{$k}='{$json}'";
@@ -39,7 +41,6 @@ class HtmlHelper{
     $attr = self::createAttributes($options);
     return "<{$tag} {$attr}>{$content}</{$tag}>";
   }
-
   public static function input($attributes){
     return self::tag("input", $attributes);
   }

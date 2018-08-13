@@ -47,12 +47,12 @@ class AssetManager{
     return $assets;
   }
   public static function sortAssets($assets){
-    usort($assets, function($a, $b){
-      if(isset($a["depends"])){
-        $changed = true;
-        return ($a["depends"] == $b[0]) ? -1 : 1;
-      }
-    });
+    // usort($assets, function($a, $b){
+    //   if(isset($a["depends"])){
+    //     $changed = true;
+    //     return ($a["depends"] == $b[0]) ? -1 : 1;
+    //   }
+    // });
     return $assets;
   }
 }

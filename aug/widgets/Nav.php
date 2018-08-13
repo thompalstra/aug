@@ -20,7 +20,20 @@ class Nav extends \aug\base\Widget{
 
     $out[] = HtmlHelper::openTag("ul", $attributes);
     foreach($items as $item){
-      $out[] = HtmlHelper::openTag("li");
+      if(empty($item)){
+        continue;
+      }
+      $attributes = isset($item["attributes"]) ? $item["attributes"] : [];
+
+      if(isset($item["items"])){
+        if(isset($attributes["class"])){
+          $attribute["class"] .= " has-children";
+        } else {
+          $attribute["class"] = "has-children";
+        }
+      }
+
+      $out[] = HtmlHelper::openTag("li",$attributes);
 
       if(isset($item["url"])){
         $out[] = HtmlHelper::tag("a", ["href"=>$item["url"]], $item["label"]);

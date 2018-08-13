@@ -24,26 +24,36 @@ CommonAsset::register();
               "label" => "Home",
               "url" => "/"
             ],
+            (!\Aug::$app->user->isGuest) ? [
+              "label" => "Me (" . \Aug::$app->user->username . ")",
+              "items" => [
+                [
+                  "label" => "Logout",
+                  "url" => "/logout"
+                ]
+              ]
+            ] : [],
+            [
+              "label" => "",
+              "attributes" => [
+                "class" => "separator"
+              ]
+            ],
             [
               "label" => "CMS",
               "items" => [
-                [
-                  "label" => "Users",
-                  "items" => [
-                    [
-                      "label" => "Create User",
-                      "url" => "/user/new"
-                    ],
-                    [
-                      "label" => "View users",
-                      "url" => "/user"
-                    ],
-                    [
-                      "label" => "Roles",
-                      "url" => "/roles"
-                    ]
-                  ]
-                ]
+                (\Aug::$app->user->can("userCreate")) ? [
+                  "label" => "Create User",
+                  "url" => "/user/new"
+                ] : [],
+                (\Aug::$app->user->can("userView")) ? [
+                  "label" => "View users",
+                  "url" => "/user"
+                ] : [],
+                (\Aug::$app->user->can("roleView")) ? [
+                  "label" => "Roles",
+                  "url" => "/roles"
+                ] : []
               ]
             ]
           ]

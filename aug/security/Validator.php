@@ -11,8 +11,7 @@ class Validator{
   public static function validateRule($model, $rule){
     $validator = "as $rule[1]";
     foreach($rule[0] as $attribute){
-      $fn = ClassHelper::camelCase($validator);
-
+      $fn = ClassHelper::toCamelCase($validator);
       if(method_exists(get_called_class(), $fn)){
         call_user_func_array([get_called_class(), $fn], [$model, $attribute, $rule]);
       } else if(method_exists($model, $fn)){

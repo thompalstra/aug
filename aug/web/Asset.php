@@ -2,8 +2,9 @@
 namespace aug\web;
 class Asset{
   public static function register(){
-    $jsFiles = get_called_class()::js();
-    $cssFiles = get_called_class()::css();
+    $className = get_called_class();
+    $jsFiles = $className::js();
+    $cssFiles = $className::css();
     foreach($jsFiles as $jsFile){
       AssetManager::registerJsFile($jsFile);
     }

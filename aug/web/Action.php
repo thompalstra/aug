@@ -5,7 +5,7 @@ use aug\helpers\ClassHelper;
 class Action implements ActionInterface{
   public function __construct($id, $params){
     $this->id = $id;
-    $this->name = "action" . ClassHelper::camelCase($this->id);
+    $this->name = "action" . ClassHelper::toCamelCase($this->id);
     $this->params = $params;
   }
   public static function parseRequest($request){

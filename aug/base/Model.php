@@ -22,24 +22,27 @@ class Model extends Base{
     }
   }
   public static function find(){
-    return (new Query(get_called_class()))
+    $className = get_called_class();
+    return (new Query($className))
       ->select("*")
-      ->from(get_called_class()::tableName());
+      ->from($className::tableName());
   }
   public static function findOne($where = []){
+    $className = get_called_class();
     return (new Query(get_called_class()))
       ->select("*")
-      ->from(get_called_class()::tableName())
+      ->from($className::tableName())
       ->where($where)
       ->one();
   }
   public static function getColumns(){
+    $className =  get_called_class();
     return (new Query(get_called_class()))
       ->select("column_name, column_type")
       ->from("information_schema.columns")
       ->where([
         ["table_schema" => \aug\db\Connection::$connection["dbname"]],
-        ["table_name" => get_called_class()::tableName()]
+        ["table_name" =>$className::tableName()]
       ])
       ->columns();
   }

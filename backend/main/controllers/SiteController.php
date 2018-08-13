@@ -9,11 +9,15 @@ class SiteController extends \aug\web\Controller{
         "allow" => true
       ],
       "*" => [
-        "allow" => !\Aug::$app->user->isGuest && \Aug::$app->user->can("admin")
+        "allow" => !\Aug::$app->user->isGuest && \Aug::$app->user->can("admin"),
+        "onDeny" => function(){
+          $this->redirect("/login");
+        }
       ],
     ];
   }
   public function actionLogin(){
+    $this->layout = "login";
     $user = User::find()->one();
 
     $loginForm = new LoginForm();
@@ -31,4 +35,5 @@ class SiteController extends \aug\web\Controller{
     \Aug::$app->user->logout();
     header("Location: /login");
   }
+  
 }

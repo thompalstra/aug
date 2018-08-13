@@ -6,7 +6,6 @@ $options = [
   "en_US" => "United States",
 ];
 ?>
-
 <?=$form->field($account, "first_name")->textInput()?>
 <?=$form->field($account, "last_name")->textInput()?>
 <?=$form->field($account, "nationality")->selectInput($options, [])?>

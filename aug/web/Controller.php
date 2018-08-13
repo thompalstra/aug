@@ -29,8 +29,8 @@ class Controller implements ControllerInterface{
     if(count($uriParts) > 0 && !empty($uriParts[count($uriParts)-1])){
       $controllerNameSpace = implode("/", $uriParts) . "/";
     }
-    $controllerName = ClassHelper::camelCase($controller."Controller");
-    $namespace = ClassHelper::namespace("{$environmentRelativePath}controllers/{$controllerNameSpace}{$controllerName}");
+    $controllerName = ClassHelper::toCamelCase($controller."Controller");
+    $namespace = ClassHelper::toNamespace("{$environmentRelativePath}controllers/{$controllerNameSpace}{$controllerName}");
 
     if(class_exists($namespace)){
       $c = new $namespace();
@@ -62,8 +62,8 @@ class Controller implements ControllerInterface{
             if(isset($rule["onAllow"])){
               call_user_func_array($rule["onAllow"], [$rule]);
             }
+            return false;
           }
-          break;
         }
       }
     }

@@ -25,15 +25,14 @@ class UserController extends \aug\web\Controller{
     if($_POST){
       if(($user->isNewRecord && \Aug::$app->user->can("userCreate")) || \Aug::$app->user->can("userUpdate")){
         if($user->load($_POST) && $account->load($_POST)){
-          if($user->validate() && $account->validate()){
+          $user->validate(); $account->validate();
+          if(!$user->hasErrors() && !$account->hasErrors()){
             if($user->isNewRecord){
-              
               $user->created_at = time();
               $user->updated_at = time();
               $user = $user->save(false);
               $account->user_id = $user->id;
               $account->save();
-
               return $this->redirect("/user/{$user->id}");
             } else  {
               $user->save(false);

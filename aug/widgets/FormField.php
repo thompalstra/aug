@@ -94,7 +94,8 @@ class FormField extends \aug\base\Widget{
 
   }
   public function getInputName(){
-    $shortClassName = $this->model::getShortClassName();
+    $model = $this->model;
+    $shortClassName = $model::getShortClassName();
     $attributeName = $this->attribute;
     $l = strlen($attributeName);
     if($attributeName[$l-1] == "]" && $attributeName[$l-2] == "["){

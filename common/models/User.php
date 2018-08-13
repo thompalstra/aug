@@ -8,8 +8,8 @@ class User extends \aug\security\Identity{
     return [
       [["username"], "required"],
       [["username"], "string", "min"=>2, "max"=>255, "skipOnEmpty"=>true],
-      [["password"], "string", "min"=>6, "max"=>32, "skipOnEmpty"=>true],
       [["is_enabled", "is_deleted"], "boolean"],
+      [["password"], "passwordValidator", "min"=>4,"max"=>32]
     ];
   }
 
@@ -28,4 +28,29 @@ class User extends \aug\security\Identity{
       ["is_deleted"=>0]
     ]);
   }
+  public function asPasswordValidator($model, $attribute, $rule){
+    $value = $model->$attribute;
+    $password = $model->password;
+    if(empty($value)){
+      if(empty($password)){
+        $model->addError($attribute, "Password is required.");
+      } else {
+        $min = isset($rule["min"]) ? $rule["min"] : null;
+        $max = isset($rule["max"]) ? $rule["max"] : null;
+
+        if($min && strlen($password) < $min){
+          $model->addError($attribute, "Password must be more than {$min} characters");
+        }
+        if($max && strlen($password) > $max){
+          $model->addError($attribute, "Password must be less than {$min} characters");
+        }
+
+        if(empty($model->getErrors($attribute))){
+          $model->$attribute = Security::passwordHash($password);
+        }
+      }
+    }
+  }
+
+
 }
