@@ -35,5 +35,5 @@ class SiteController extends \aug\web\Controller{
     \Aug::$app->user->logout();
     header("Location: /login");
   }
-  
+
 }

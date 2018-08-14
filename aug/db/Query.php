@@ -19,6 +19,12 @@ class Query{
     $this->from = $from;
     return $this;
   }
+  public function limit($limit){
+    $this->limit = $limit;
+  }
+  public function offset($offset){
+    $this->offset = $offset;
+  }
   public function where($where){
     $this->parts[] = [
       "WHERE" => $where
@@ -62,6 +68,9 @@ class Query{
   public function exists(){
     return $this->fetchExists($this->createCommand());
   }
+  public function count(){
+    return $this->fetchCount($this->createCommand());
+  }
   public function columns(){
     return $this->fetchColumns($this->createCommand());
   }
@@ -96,6 +105,11 @@ class Query{
       ]);
     }
     return $sth->fetch();
+  }
+  public function fetchCount($command){
+    $sth = Connection::$dbh->prepare($command);
+    $sth->execute();
+    return $sth->rowCount();
   }
   public function insert($columns, $values){
     $className = $this->className;
@@ -145,6 +159,14 @@ class Query{
         break;
       }
     }
+
+    if(!empty($this->limit)){
+      $lines[] = "LIMIT {$this->limit}";
+    }
+    if(!empty($this->offset)){
+      $lines[] = "OFFSET {$this->offset}";
+    }
+
     return implode(" ", $lines);
   }
   public static function createValue($value){
@@ -223,5 +245,8 @@ class Query{
   public static function in($parts){
     $value = self::createValue($parts[2]);
     return "{$parts[1]} {$parts[0]} ({$value})";
+  }
+  public function getClassName(){
+    return $this->className;
   }
 }

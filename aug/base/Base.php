@@ -5,8 +5,28 @@ class Base{
     $fn = "get" . str_replace(" ", "",ucwords(str_replace("_", " ",$name)));
     if(method_exists($this, $fn)){
         return call_user_func_array([$this, $fn], []);
+    } else if(strpos($name, ".")){
+      $parts = explode(".", $name);
+      $instance = null;
+      foreach($parts as $part){
+        if(empty($instance)){
+          $instance = $this->$part;
+          if(empty($instance)){
+            return null;
+          }
+        } else{
+          $instance = $instance->$part;
+          if(empty($instance)){
+            return null;
+          }
+        }
+      }
+
+      return $instance;
+    } else {
+      return $this->$name;
     }
-    return $this->$name;
+    return null;
   }
   public static function className(){
     return get_called_class();
@@ -24,14 +44,14 @@ class Base{
     }
     return false;
   }
-  public function getAttributeLabel($attribute){
+  public static function getAttributeLabel($attribute){
     if(method_exists(get_called_class(), "labels")){
       $labels = call_user_func_array([get_called_class(), "labels"], []);
       if(isset($labels[$attribute])){
         return $labels[$attribute];
       }
     }
-    $attribute = str_replace("_", " ", $attribute);
+    $attribute = str_replace(["_", "."], " ", $attribute);
     $attribute = ucwords($attribute);
     return $attribute;
   }

@@ -1,5 +1,6 @@
 <?php
 namespace common\models;
+use common\models\UserAccount;
 class User extends \aug\security\Identity{
 
   protected $password;
@@ -15,6 +16,16 @@ class User extends \aug\security\Identity{
 
   public static function tableName(){
     return "user";
+  }
+  public static function labels(){
+    return [
+      "id" => "#",
+      "account.first_name" => "Lastname",
+      "account.last_name" => "Firstname",
+      "account.nationality" => "Nationality",
+      "is_enabled" => "Enabled"
+    ];
+
   }
   public function getAccount(){
     return UserAccount::find()

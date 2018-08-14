@@ -13,3 +13,6 @@ html, body{
   flex: 0 200px;
   background-color: #111;
 }
+.columns .column.main{
+  padding: 10px;
+}

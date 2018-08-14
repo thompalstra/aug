@@ -1,0 +1,25 @@
+.table{
+
+}
+.table.table-default{
+  width: 100%;
+}
+.table.table-default thead{
+
+}
+.table.table-default thead tr{
+
+}
+.table.table-default thead tr td{
+  padding: .5rem;
+  font-weight: bold;
+}
+.table.table-default tbody{
+
+}
+.table.table-default tbody tr{
+
+}
+.table.table-default tbody tr td{
+  padding: 1rem .5rem;
+}

@@ -1,5 +1,8 @@
 <?php
 namespace backend\main\controllers;
+
+use aug\data\DataProvider;
+
 use common\models\User;
 use common\models\UserAccount;
 class UserController extends \aug\web\Controller{
@@ -48,10 +51,19 @@ class UserController extends \aug\web\Controller{
     ]);
   }
   public function actionIndex(){
-    return $this->render("index", [
+
+    $dataProvider = new DataProvider([
       "query" => User::find([
-        ["is_deleted"=>0]
-      ])
+        "is_deleted" => 0
+      ]),
+      "pagination" => [
+        "page" => isset($_GET["page"]) ? $_GET["page"] : 1,
+        "pageSize" => isset($_GET["page-size"]) ? $_GET["page-size"] : 1
+      ]
+    ]);
+
+    return $this->render("index", [
+      "dataProvider" => $dataProvider
     ]);
   }
 }

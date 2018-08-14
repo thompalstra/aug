@@ -59,10 +59,12 @@ class Controller implements ControllerInterface{
             if(isset($rule["onDeny"])){
               call_user_func_array($rule["onDeny"], [$rule]);
             }
+            return false;
+          } else {
             if(isset($rule["onAllow"])){
               call_user_func_array($rule["onAllow"], [$rule]);
             }
-            return false;
+            return true;
           }
         }
       }

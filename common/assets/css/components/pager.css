@@ -1,0 +1,32 @@
+.pager{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pager li{
+  flex: 0 auto;
+}
+.pager.pager-default li{
+  /* background: #f2f2f2; */
+  display: flex;
+}
+.pager.pager-default li:hover{
+  background: #aaa;
+  color: white;
+}
+.pager.pager-default li.active{
+  background: #333;
+  color: white;
+}
+.pager.pager-default li a {
+  display: flex;
+  color: inherit;
+  text-decoration: none;
+  justify-content: center;
+  align-items: center;
+  min-height: 24px;
+  min-width: 24px;
+}

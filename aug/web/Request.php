@@ -1,8 +1,18 @@
 <?php
 namespace aug\web;
 class Request implements RequestInterface{
+  public static function toUrl($uri, $parts = []){
+    $queryString = "";
+    if(!empty($parts)){
+      $queryString = "?" . http_build_query($parts);
+    }
+    return "{$uri}{$queryString}";
+  }
   public static function handleRequest($uri){
     $default = \Aug::$app->web["default"];
+    if(strpos($uri, "?")){
+      $uri = substr($uri, 0, strpos($uri, "?"));
+    }
     $defaultParts = explode("/",trim($default, "/"));
     $uriParts = explode("/",trim($uri, "/"));
 
@@ -13,9 +23,6 @@ class Request implements RequestInterface{
     $controller = $defaultParts[count($defaultParts)-1];
     array_pop($defaultParts);
     $path = implode("/",$defaultParts);
-
-
-    // var_dump(\Aug::$app->routes, $uri); die;
 
     foreach(\Aug::$app->routes as $toMatch => $matchedRoute){
       $matchCount = 0;

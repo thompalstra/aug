@@ -21,7 +21,7 @@ class FormField extends \aug\base\Widget{
   public function getLabel($attributes = []){
     $model = $this->model;
     $attribute = $this->attribute;
-    return HtmlHelper::tag("label", $attributes, $model->getAttributeLabel($attribute));
+    return HtmlHelper::tag("label", $attributes, $model::getAttributeLabel($attribute));
   }
   public function getErrors($attributes = []){
     $errors = "";
