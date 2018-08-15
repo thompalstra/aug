@@ -5,6 +5,6 @@ class Security{
     return password_verify($password, $hash);
   }
   public static function passwordHash($password){
-    return password_hash($password);
+    return password_hash($password, PASSWORD_DEFAULT);
   }
 }

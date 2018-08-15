@@ -1,0 +1,56 @@
+.action{
+  background: #3498db;
+  color: white;
+}
+.action:hover{
+  background: #3e9ddc;
+  color: white;
+}
+.action:active{
+  background: #48a2de;
+  color: white;
+}
+.btn{
+  border: 0;
+  cursor: pointer;
+}
+.btn.btn-default{
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 32px;
+  height: 32px;
+  outline: 0;
+  border-radius: 4px;
+  margin: 0 5px;
+  padding: 0 .5rem;
+}
+.btn.btn-default{
+  background: transparent;
+  border: 1px solid #ddd;
+}
+.btn.btn-default:hover{
+  background: #f6f6f6;
+}
+.btn.btn-default:active{
+  background: #f2f2f2;
+}
+select{
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 32px;
+  outline: 0;
+  background: transparent;
+  border: 1px solid #ddd;
+  margin: 0 5px;
+  padding: 0 .5rem;
+}
+select:hover{
+  background: #f6f6f6;
+}
+select:active{
+  background: #f2f2f2;
+}

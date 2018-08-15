@@ -1,0 +1,17 @@
+.form{
+
+}
+.form.form-default{
+
+}
+.form.form-default .form-row{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+.form.form-default .form-row .form-label{
+  flex: 0 20%;
+}
+.form.form-default .form-row .form-control{
+  flex: 1;
+}

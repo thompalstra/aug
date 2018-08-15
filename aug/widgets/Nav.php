@@ -1,6 +1,6 @@
 <?php
 namespace aug\widgets;
-use aug\helpers\HtmlHelper;
+use aug\helpers\Html;
 class Nav extends \aug\base\Widget{
 
   protected $items = [];
@@ -13,12 +13,12 @@ class Nav extends \aug\base\Widget{
     }
   }
   public function openNav($options = []){
-    // return HtmlHelper::openTag("nav", $options);
+    // return Html::openTag("nav", $options);
   }
   public function createItems($items = [], $attributes = []){
     $out = [];
 
-    $out[] = HtmlHelper::openTag("ul", $attributes);
+    $out[] = Html::openTag("ul", $attributes);
     foreach($items as $item){
       if(empty($item)){
         continue;
@@ -32,31 +32,25 @@ class Nav extends \aug\base\Widget{
           $attribute["class"] = "has-children";
         }
       }
-
-      $out[] = HtmlHelper::openTag("li",$attributes);
-
+      $out[] = Html::openTag("li",$attributes);
       if(isset($item["url"])){
-        $out[] = HtmlHelper::tag("a", ["href"=>$item["url"]], $item["label"]);
+        $out[] = Html::tag("a", ["href"=>$item["url"]], $item["label"]);
       } else {
-        $out[] = HtmlHelper::tag("span", [], $item["label"]);
+        $out[] = Html::tag("span", [], $item["label"]);
       }
-
       if(isset($item["items"])){
         $out[] = $this->createItems($item["items"]);
       }
-
-      $out[] = HtmlHelper::closeTag("li");
+      $out[] = Html::closeTag("li");
     }
-    $out[] = HtmlHelper::closeTag("ul");
+    $out[] = Html::closeTag("ul");
     return implode("", $out);
   }
   public function closeNav(){
-    return HtmlHelper::closeTag("nav");
+    return Html::closeTag("nav");
   }
   public function toHtml(){
-    // $html = $this->openNav($this->attributes);
     $html = $this->createItems($this->items, $this->attributes);
-    // $html .= $this->closeNav();
     return $html;
   }
   public function run(){

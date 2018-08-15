@@ -1,10 +1,11 @@
 <?php
 namespace aug\web;
 class Request implements RequestInterface{
-  public static function toUrl($uri, $parts = []){
+  public static function toUrl($route){
+    $uri = $route[0];
     $queryString = "";
-    if(!empty($parts)){
-      $queryString = "?" . http_build_query($parts);
+    if(isset($route[1]) && !empty($route[1])){
+      $queryString = "?" . http_build_query($route[1]);
     }
     return "{$uri}{$queryString}";
   }

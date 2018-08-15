@@ -1,6 +1,6 @@
 <?php
 namespace aug\web;
-use aug\helpers\FileHelper;
+use aug\helpers\File;
 use aug\helpers\ClassHelper;
 class Controller implements ControllerInterface{
 
@@ -37,8 +37,8 @@ class Controller implements ControllerInterface{
       $c->id = $controller;
       $c->name = $controllerName;
       $c->layout = \Aug::$app->web["layout"];
-      $c->layoutPath = FileHelper::path("{$environmentRelativePath}layouts/");
-      $c->viewPath = FileHelper::path("{$environmentRelativePath}views/{$controllerNameSpace}{$controller}/");
+      $c->layoutPath = File::path("{$environmentRelativePath}layouts/");
+      $c->viewPath = File::path("{$environmentRelativePath}views/{$controllerNameSpace}{$controller}/");
       return $c;
     } else {
 

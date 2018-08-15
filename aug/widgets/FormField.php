@@ -1,6 +1,6 @@
 <?php
 namespace aug\widgets;
-use aug\helpers\HtmlHelper;
+use aug\helpers\Html;
 class FormField extends \aug\base\Widget{
 
   protected $model;
@@ -16,37 +16,46 @@ class FormField extends \aug\base\Widget{
     $this->attributeValue = $this->getAttributeValue();
   }
   public function getRowStart($attributes = []){
-    return HtmlHelper::openTag("div", $attributes);
+    return Html::openTag("div", $attributes);
   }
   public function getLabel($attributes = []){
     $model = $this->model;
     $attribute = $this->attribute;
-    return HtmlHelper::tag("label", $attributes, $model::getAttributeLabel($attribute));
+    return Html::tag("label", $attributes, $model::getAttributeLabel($attribute));
   }
   public function getErrors($attributes = []){
     $errors = "";
+    $attributes = Html::mergeAttributes($this->form->controlOptions, $attributes);
+    var_dump($this->form->controlOptions, $attributes); die;
     if($this->model->hasErrors()){;
       $errors = [];
       foreach($this->model->getErrors($this->attribute) as $msg){
         $errors[] =
-         HtmlHelper::openTag("span", []) . $msg . HtmlHelper::closeTag("span");
+         Html::openTag("span", []) . $msg . Html::closeTag("span");
       }
-      $errors = HtmlHelper::openTag("label", $attributes) . implode("", $errors) . HtmlHelper::closeTag("label");
+      $errors = Html::openTag("label", $attributes) . implode("", $errors) . Html::closeTag("label");
     }
     return $errors;
   }
   public function getRowEnd(){
-    return HtmlHelper::closeTag("div");
+    return Html::closeTag("div");
   }
   public function createLayout($control){
     $layout = $this->form->getLayout();
     $layout = str_replace("{rowStart}", $this->getRowStart($this->form->rowOptions), $layout);
     $layout = str_replace("{label}", $this->getLabel($this->form->labelOptions), $layout);
+    $layout = str_replace("{controlRowStart}", $this->getControlRowStart($this->form->controlRowOptions), $layout);
     $layout = str_replace("{control}", $control, $layout);
+    $layout = str_replace("{controlRowEnd}", $this->getControlRowEnd(), $layout);
     $layout = str_replace("{errors}", $this->getErrors($this->form->errorOptions), $layout);
     $layout = str_replace("{rowEnd}", $this->getRowEnd(), $layout);
-
     return $layout;
+  }
+  public function getControlRowStart($attributes = []){
+    return Html::openTag("div", $attributes);
+  }
+  public function getControlRowEnd(){
+    return Html::closeTag("div");
   }
   public function textInput($attributes = []){
     $attributes["type"] = "text";
@@ -56,7 +65,7 @@ class FormField extends \aug\base\Widget{
     if(!isset($attributes["value"])){
       $attributes["value"] = $this->attributeValue;
     }
-    return $this->createLayout(HtmlHelper::input($attributes));
+    return $this->createLayout(Html::input($attributes));
   }
   public function passwordInput($attributes = []){
     $attributes["type"] = "password";
@@ -66,7 +75,7 @@ class FormField extends \aug\base\Widget{
     if(!isset($attributes["value"])){
       $attributes["value"] = $this->attributeValue;
     }
-    return $this->createLayout(HtmlHelper::input($attributes));
+    return $this->createLayout(Html::input($attributes));
   }
   public function checkboxInput($attributes = []){
     $attributes["type"] = "checkbox";
@@ -82,13 +91,13 @@ class FormField extends \aug\base\Widget{
       "value" => 0,
       "name" => $this->inputName
     ];
-    return $this->createLayout(HtmlHelper::input($hiddenAttributes).HtmlHelper::input($attributes));
+    return $this->createLayout(Html::input($hiddenAttributes).Html::input($attributes));
   }
   public function selectInput($options = [], $attributes = []){
     if(!isset($attributes["name"])){
       $attributes["name"] = $this->inputName;
     }
-    return $this->createLayout(HtmlHelper::select($options, $this->attributeValue, $attributes));
+    return $this->createLayout(Html::select($options, $this->attributeValue, $attributes));
   }
   public function getInputId(){
 

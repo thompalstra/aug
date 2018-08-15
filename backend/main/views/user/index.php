@@ -1,4 +1,7 @@
 <?php
+
+use aug\helpers\Html;
+
 use aug\widgets\Pager;
 use aug\widgets\Table;
 ?>
@@ -18,6 +21,12 @@ use aug\widgets\Table;
       "attribute" => "is_enabled",
       "value" => function($model){
         return ($model->is_enabled) ? "Y" : "N";
+      }
+    ],
+    [
+      "label" => "das",
+      "value" => function($model){
+        return Html::a("View", ["/user/{$model->id}"]);
       }
     ]
   ]

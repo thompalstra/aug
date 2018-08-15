@@ -95,16 +95,17 @@ class Model extends Base{
       }
       $values[] = $value;
     }
-    $result = (new Query(get_called_class()))
+    $id = (new Query(get_called_class()))
       ->insert($columns, $values);
 
-
-    // var_dump($result); die;
-    if($result !== null){
-      return self::find()
-        ->where([
-          ["id"=>$result]
-        ])->one();
+    if($id !== false){
+      $model = self::find()->where([
+        ['id'=>$id]
+      ])->one();
+      foreach($model as $k => $v){
+        $this->$k = $v;
+      }
+      return true;
     }
     return false;
   }

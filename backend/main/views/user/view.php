@@ -1,6 +1,6 @@
 <?php
 use aug\widgets\Form;
-use aug\helpers\HtmlHelper;
+use aug\helpers\Html;
 $form = new Form();
 ?>
 
@@ -18,12 +18,12 @@ $form = new Form();
         <li><a href="#tct2">Account</a></li>
       </ul>
       <ul class="tabs">
-        <?=HtmlHelper::tag("li", [
+        <?=Html::tag("li", [
           "id" => "tct1",
           "class" => ["tab","active"] + ($user->hasErrors() ? ["has-error"] : [])
         ], $this->renderPartial("partials/user", ["form" => $form,"user" => $user])
         )?>
-        <?=HtmlHelper::tag("li", [
+        <?=Html::tag("li", [
           "id" => "tct2",
           "class" => ["tab"] + ($account->hasErrors() ? ["has-error"] : [])
         ], $this->renderPartial("partials/account", ["form" => $form,"account" => $account])

@@ -1,6 +1,7 @@
 <?php
 namespace aug\helpers;
-class HtmlHelper{
+use aug\web\Request;
+class Html{
   public static function createAttributes($options = []){
     $opt = [];
     foreach($options as $k => $v){
@@ -19,6 +20,28 @@ class HtmlHelper{
       }
     }
     return implode(" ", $opt);
+  }
+  public static function mergeAttributes($original, $new){
+    $out = [];
+    foreach($new as $k => $v){
+
+      if(is_array($v) && isset($original[$k])){
+        $out[] = self::mergeAttributes($original[$k], $v);
+      }
+
+      // var_dump($k);
+      // if(is_array($v) && isset($original[$k])){
+      //   // $out[] = self::mergeAttributes($original[$k], $new[$k]);
+      //   $out[] = $original[$k] + $new[$k];
+      // } else if(!is_array($v)) {
+      //   if(!isset($original[$k])){
+      //     $out[$k] = $v;
+      //   } else {
+      //     $out[$k] = [$original[$k] + $v];
+      //   }
+      // }
+    }
+    return array_merge($original, $new);
   }
   public static function createStyleAttributes($options = []){
     $opt = [];
@@ -53,11 +76,16 @@ class HtmlHelper{
       if($k == $value){
         $optionAttributes["selected"] = "";
       }
-      $out[] = HtmlHelper::tag("option", $optionAttributes, $v);
+      $out[] = Html::tag("option", $optionAttributes, $v);
     }
 
     $out = implode("", $out);
 
     return self::tag("select", $attributes, $out);
+  }
+  public static function a($content, $url, $options = []){
+    $url = Request::toUrl($url);
+    $options["href"] = $url;
+    return Html::tag("a", $options, $content);
   }
 }

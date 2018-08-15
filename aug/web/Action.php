@@ -1,6 +1,6 @@
 <?php
 namespace aug\web;
-use aug\helpers\FileHelper;
+use aug\helpers\File;
 use aug\helpers\ClassHelper;
 class Action implements ActionInterface{
   public function __construct($id, $params){

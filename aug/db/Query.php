@@ -117,13 +117,14 @@ class Query{
 
     $columns = "{$tableName} (" . self::createColumns($columns) . ")";
     $values = "VALUES (" . self::createValues($values) . ")";
+
     $dbh = Connection::$dbh;
     $sth = $dbh->prepare("INSERT IGNORE INTO {$columns} {$values}");
     $sth->execute();
     if($sth->rowCount()){
       return $dbh->lastInsertId();
     }
-    return null;
+    return false;
   }
   public function update($set, $where){
     $className = $this->className;
@@ -132,7 +133,8 @@ class Query{
     $set = "SET " . self::createSet($set);
     $where = "WHERE (" . self::createWhere($where) . ")";
 
-    $sth = Connection::$dbh->prepare("UPDATE {$tableName} {$set} {$where}");
+    $dbh = Connection::$dbh;
+    $sth = $dbh->prepare("UPDATE {$tableName} {$set} {$where}");
     return $sth->execute();
   }
   public function createCommand(){

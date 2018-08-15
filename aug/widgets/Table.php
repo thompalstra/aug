@@ -1,6 +1,6 @@
 <?php
 namespace aug\widgets;
-use aug\helpers\HtmlHelper;
+use aug\helpers\Html;
 class Table extends \aug\base\Widget{
 
   protected $attributes = [
@@ -39,44 +39,53 @@ class Table extends \aug\base\Widget{
     return $html;
   }
   public function openTable($attributes = []){
-    return HtmlHelper::openTag("table", $attributes);
+    return Html::openTag("table", $attributes);
   }
   public function head($attributes = []){
-    $head = HtmlHelper::openTag("thead", $attributes);
-    $head .= HtmlHelper::openTag("tr");
+    $head = Html::openTag("thead", $attributes);
+    $head .= Html::openTag("tr");
+    $className = $this->className;
     foreach($this->columns as $column){
-      $attribute = is_string($column) ? $column : $column["attribute"];
-      $className = $this->className;
-      $label = $className::getAttributeLabel($attribute);
-      $head .= HtmlHelper::tag("td", [], $label);
+      if(is_string($column)){
+        $label = $className::getAttributeLabel($column);
+      }
+      else if(is_array($column) && isset($column["attribute"])){
+        $label = $className::getAttributeLabel($column["attribute"]);
+      }
+      else if(is_array($column) && isset($column["label"])){
+        $label = $column["label"];
+      }
+      $head .= Html::tag("td", [], $label);
     }
-    $head .= HtmlHelper::closeTag("tr");
-    $head .= HtmlHelper::closeTag("thead");
+    $head .= Html::closeTag("tr");
+    $head .= Html::closeTag("thead");
 
     return $head;
   }
   public function rows($attributes = []){
-    $head = HtmlHelper::openTag("tbody", $attributes);
+    $head = Html::openTag("tbody", $attributes);
     foreach($this->dataProvider->getModels() as $model){
-      $head .= HtmlHelper::openTag("tr");
+      $head .= Html::openTag("tr");
       foreach($this->columns as $column){
         $cellAttributes = $this->cellAttributes;
-        $attribute = is_string($column) ? $column : $column["attribute"];
-        if(isset($column["value"])){
+        if(is_string($column)){
+          $value = $model->$column;
+        } else if(is_array($column) && isset($column["value"])){
           $fn = $column["value"];
           $value = $fn($model);
-        } else {
+        } else if(is_array($column) && isset($column["attribute"])){
+          $attribute = $column["attribute"];
           $value = $model->$attribute;
         }
-        $head .= HtmlHelper::tag("td", $cellAttributes, $value);
+        $head .= Html::tag("td", $cellAttributes, $value);
       }
-      $head .= HtmlHelper::closeTag("tr");
+      $head .= Html::closeTag("tr");
     }
-    $head .= HtmlHelper::closeTag("thead");
+    $head .= Html::closeTag("thead");
 
     return $head;
   }
   public function closeTable(){
-    return HtmlHelper::closeTag("table");
+    return Html::closeTag("table");
   }
 }

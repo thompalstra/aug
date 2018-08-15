@@ -30,16 +30,19 @@ class UserController extends \aug\web\Controller{
         if($user->load($_POST) && $account->load($_POST)){
           $user->validate(); $account->validate();
           if(!$user->hasErrors() && !$account->hasErrors()){
+            $redirect = false;
             if($user->isNewRecord){
               $user->created_at = time();
               $user->updated_at = time();
-              $user = $user->save(false);
+              $redirect = true;
+            }
+            $user->save(false);
+            if($account->isNewRecord){
               $account->user_id = $user->id;
-              $account->save();
+            }
+            $account->save(false);
+            if($redirect){
               return $this->redirect("/user/{$user->id}");
-            } else  {
-              $user->save(false);
-              $account->save(false);
             }
           }
         }

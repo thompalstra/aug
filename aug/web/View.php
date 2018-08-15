@@ -1,6 +1,6 @@
 <?php
 namespace aug\web;
-use aug\helpers\FileHelper;
+use aug\helpers\File;
 use aug\helpers\ClassHelper;
 use aug\web\AssetManager;
 class View implements ViewInterface{
@@ -9,8 +9,8 @@ class View implements ViewInterface{
     $layoutPath = \Aug::$app->controller->layoutPath;
     $layoutName = \Aug::$app->controller->layout;
 
-    $layoutFile = FileHelper::path("{$layoutPath}{$layoutName}.php");
-    $viewFile = FileHelper::path("{$viewPath}{$viewName}.php");
+    $layoutFile = File::path("{$layoutPath}{$layoutName}.php");
+    $viewFile = File::path("{$viewPath}{$viewName}.php");
     echo $this->renderFile($layoutFile, [
       "content" => $this->renderFile($viewFile, $data)
     ]);
@@ -32,7 +32,7 @@ class View implements ViewInterface{
   }
   public function renderPartial($viewName, $data = []){
     $viewPath = \Aug::$app->controller->viewPath;
-    $viewFile = FileHelper::path("{$viewPath}{$viewName}.php");
+    $viewFile = File::path("{$viewPath}{$viewName}.php");
     return $this->renderFile($viewFile, $data);
   }
 

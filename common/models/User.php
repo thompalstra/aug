@@ -1,10 +1,9 @@
 <?php
 namespace common\models;
 use common\models\UserAccount;
+use aug\security\Security;
 class User extends \aug\security\Identity{
-
   protected $password;
-
   public static function rules(){
     return [
       [["username"], "required"],
@@ -28,10 +27,14 @@ class User extends \aug\security\Identity{
 
   }
   public function getAccount(){
-    return UserAccount::find()
+    $account = UserAccount::find()
       ->where([
         ["user_id"=>$this->id]
       ])->one();
+    if(empty($account)){
+      return new UserAccount();
+    }
+    return $account;
   }
   public static function findById($id){
     return self::findOne([
@@ -40,12 +43,11 @@ class User extends \aug\security\Identity{
     ]);
   }
   public function asPasswordValidator($model, $attribute, $rule){
-    $value = $model->$attribute;
-    $password = $model->password;
-    if(empty($value)){
-      if(empty($password)){
-        $model->addError($attribute, "Password is required.");
-      } else {
+    $password = $model->$attribute;
+    $password_hash = $model->password_hash;
+    if(empty($password) && empty($password_hash)){
+      $model->addError($attribute, "Password is required");
+    } else if(!empty($password)) {
         $min = isset($rule["min"]) ? $rule["min"] : null;
         $max = isset($rule["max"]) ? $rule["max"] : null;
 
@@ -55,13 +57,11 @@ class User extends \aug\security\Identity{
         if($max && strlen($password) > $max){
           $model->addError($attribute, "Password must be less than {$min} characters");
         }
-
-        if(empty($model->getErrors($attribute))){
-          $model->$attribute = Security::passwordHash($password);
+        if(!$model->hasErrors()){
+          $model->password_hash = Security::passwordHash($password);
         }
-      }
+    } else {
+      $model->addError($attribute, "Password is required");
     }
   }
-
-
 }

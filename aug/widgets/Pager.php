@@ -1,6 +1,6 @@
 <?php
 namespace aug\widgets;
-use aug\helpers\HtmlHelper;
+use aug\helpers\Html;
 use aug\web\Request;
 class Pager extends \aug\base\Widget{
 
@@ -15,6 +15,9 @@ class Pager extends \aug\base\Widget{
   protected $lastText = "<i class='material-icons'>last_page</i>";
   protected $attributes = [
     "class" => "pager pager-default"
+  ];
+  protected $itemAttributes = [
+    "class" => ["btn btn-default"]
   ];
   protected $pageSizes = [
     1 => 1,
@@ -49,7 +52,12 @@ class Pager extends \aug\base\Widget{
     }
     $out = [];
 
-    $out[] = HtmlHelper::openTag("ul", $this->attributes);
+    $out[] = Html::openTag("form", [
+      "method"=>"GET",
+      "action" => $_SERVER["REQUEST_URI"]
+    ]);
+
+    $out[] = Html::openTag("div", $this->attributes);
 
     $uri = $_SERVER["REQUEST_URI"];
     if(strpos($uri, "?")){
@@ -60,62 +68,74 @@ class Pager extends \aug\base\Widget{
       $params = $_GET;
       $params["page"] = 1;
       $params["page-size"] = $pageSize;
-      $liParams = [];
+      $attributes = $this->itemAttributes;
       if($currentPage == 1){
-        $liParams["class"] = "active";
+        $attributes["class"][] = "active";
       }
-      $out[] = HtmlHelper::tag("li", $liParams, HtmlHelper::tag("a", ["href"=> Request::toUrl($uri, $params) ], $this->firstText));
+
+      $attributes["class"][] = "first";
+      $attributes["name"] = "page";
+      $attributes["value"] = 1;
+      $out[] = Html::tag("button", $attributes, $this->firstText);
     }
     if($this->next && $startPage > $startOffset){
       $params = $_GET;
-      $params["page"] = $currentPage - 1;
-      $params["page-size"] = $pageSize;
-      $liParams = [];
+      $attributes = $this->itemAttributes;
       if($currentPage == $currentPage - 1){
-        $liParams["class"] = "active";
+        $attributes["class"][] = "active";
       }
-      $out[] = HtmlHelper::tag("li", $liParams, HtmlHelper::tag("a", ["href"=> Request::toUrl($uri, $params) ], $this->previousText));
+      $attributes["class"][] = "prev";
+      $attributes["name"] = "page";
+      $attributes["value"] = $currentPage - 1;
+      $out[] = Html::tag("button", $attributes, $this->previousText);
     }
     foreach(range($startOffset, $endOffset) as $pageNumber){
       $params = $_GET;
-      $params["page"] = $pageNumber;
-      $params["page-size"] = $pageSize;
-      $liParams = [];
+
+      $attributes = $this->itemAttributes;
       if($currentPage == $pageNumber){
-        $liParams["class"] = "active";
+        $attributes["class"][] = "active";
       }
-      $out[] = HtmlHelper::tag("li", $liParams, HtmlHelper::tag("a", ["href"=> Request::toUrl($uri, $params)], $pageNumber));
+      $attributes["class"][] = "page";
+      $attributes["name"] = "page";
+      $attributes["value"] = $pageNumber;
+      $out[] = Html::tag("button", $attributes, $pageNumber);
     }
     if($this->previous && $currentPage < $lastPage){
       $params = $_GET;
-      $params["page"] = $currentPage + 1;
-      $params["page-size"] = $pageSize;
-      $liParams = [];
+
+      $attributes = $this->itemAttributes;
       if($currentPage == $currentPage + 1){
-        $lastPage["class"] = "active";
+        $lastPage["class"][] = "active";
       }
-      $out[] = HtmlHelper::tag("li", $liParams, HtmlHelper::tag("a", ["href"=> Request::toUrl($uri, $params) ], $this->nextText));
+
+      $attributes["class"][] = "next";
+      $attributes["name"] = "page";
+      $attributes["value"] = $currentPage + 1;
+      $out[] = Html::tag("button", $attributes, $this->nextText);
     }
     if($this->last){
       $params = $_GET;
-      $params["page"] = $lastPage;
-      $params["page-size"] = $pageSize;
-      $liParams = [];
-      if($currentPage == $lastPage){
-        $liParams["class"] = "active";
-      }
-      $out[] = HtmlHelper::tag("li", $liParams, HtmlHelper::tag("a", ["href"=> Request::toUrl($uri, $params) ], $this->lastText));
-    }
 
+      $attributes = $this->itemAttributes;
+      if($currentPage == $lastPage){
+        $attributes["class"][] = "active";
+      }
+
+      $attributes["class"][] = "last";
+      $attributes["name"] = "page";
+      $attributes["value"] = $lastPage;
+      $out[] = Html::tag("button", $attributes, $this->lastText);
+    }
     if($this->pageSizes){
-      $out[] = HtmlHelper::select($this->pageSizes, $currentPage, [
-        "class" => "pagination pagesize"
+      $out[] = Html::select($this->pageSizes, $pageSize, [
+        "name" => "page-size",
+        "class" => "pagination pagesize",
+        "onchange" => "this.form.submit()"
       ]);
     }
-
-    $out[] = HtmlHelper::closeTag("ul");
-
-
+    $out[] = Html::closeTag("div");
+    $out[] = Html::closeTag("form");
     return implode($out);
   }
 }
