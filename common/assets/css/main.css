@@ -8,6 +8,7 @@ html, body{
 }
 .columns .column{
   flex: 1;
+  background-color: #ddd;
 }
 .columns .column.sidebar{
   flex: 0 200px;

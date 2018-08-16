@@ -22,26 +22,7 @@ class Html{
     return implode(" ", $opt);
   }
   public static function mergeAttributes($original, $new){
-    $out = [];
-    foreach($new as $k => $v){
-
-      if(is_array($v) && isset($original[$k])){
-        $out[] = self::mergeAttributes($original[$k], $v);
-      }
-
-      // var_dump($k);
-      // if(is_array($v) && isset($original[$k])){
-      //   // $out[] = self::mergeAttributes($original[$k], $new[$k]);
-      //   $out[] = $original[$k] + $new[$k];
-      // } else if(!is_array($v)) {
-      //   if(!isset($original[$k])){
-      //     $out[$k] = $v;
-      //   } else {
-      //     $out[$k] = [$original[$k] + $v];
-      //   }
-      // }
-    }
-    return array_merge($original, $new);
+    return array_replace_recursive($original, $new);
   }
   public static function createStyleAttributes($options = []){
     $opt = [];

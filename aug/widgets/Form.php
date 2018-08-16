@@ -4,24 +4,25 @@ use aug\helpers\Html;
 class Form extends \aug\base\Widget{
 
   protected $attributes = [
-    "class" => "form form-default"
+    "class" => ["form form-default"],
+    "method" => "POST"
   ];
   protected $layout = "{rowStart}{label}{controlRowStart}{control}{controlRowEnd}{errors}{rowEnd}";
 
   public $rowOptions = [
-    "class" => "form-row"
+    "class" => ["form-row"]
   ];
   public $labelOptions = [
-    "class" => "form-label"
+    "class" => ["form-label"]
   ];
   public $controlOptions = [
-    "class" => "control"
+    "class" => ["control"]
   ];
   public $controlRowOptions = [
-    "class" => "form-control"
+    "class" => ["form-control"]
   ];
   public $errorOptions = [
-    "class" => "form-error"
+    "class" => ["form-error"]
   ];
 
   public function field($model, $attribute){

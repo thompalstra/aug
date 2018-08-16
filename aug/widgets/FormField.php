@@ -26,7 +26,6 @@ class FormField extends \aug\base\Widget{
   public function getErrors($attributes = []){
     $errors = "";
     $attributes = Html::mergeAttributes($this->form->controlOptions, $attributes);
-    var_dump($this->form->controlOptions, $attributes); die;
     if($this->model->hasErrors()){;
       $errors = [];
       foreach($this->model->getErrors($this->attribute) as $msg){

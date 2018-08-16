@@ -1,10 +1,10 @@
 <?php
-
 use aug\widgets\Nav;
-
 use common\assets\CommonAsset;
+use backend\main\assets\BackendAsset;
 
 CommonAsset::register();
+BackendAsset::register();
 ?>
 <html>
   <header>
