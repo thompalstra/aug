@@ -1,7 +1,5 @@
 <?php
-
 use aug\helpers\Html;
-
 use aug\widgets\Pager;
 use aug\widgets\Table;
 ?>
@@ -26,7 +24,7 @@ use aug\widgets\Table;
     [
       "label" => "das",
       "value" => function($model){
-        return Html::a("View", ["/user/{$model->id}"]);
+        return Html::a("<i class='material-icons'>search</i>", ["/user/{$model->id}"]);
       }
     ]
   ]

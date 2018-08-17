@@ -55,7 +55,13 @@ class Table extends \aug\base\Widget{
       else if(is_array($column) && isset($column["label"])){
         $label = $column["label"];
       }
-      $head .= Html::tag("td", [], $label);
+
+      $attributes = [];
+      if(is_array($column) && isset($column["attributes"])){
+        $attributes = $column["attributes"];
+      }
+
+      $head .= Html::tag("td", $attributes, $label);
     }
     $head .= Html::closeTag("tr");
     $head .= Html::closeTag("thead");
@@ -67,7 +73,6 @@ class Table extends \aug\base\Widget{
     foreach($this->dataProvider->getModels() as $model){
       $head .= Html::openTag("tr");
       foreach($this->columns as $column){
-        $cellAttributes = $this->cellAttributes;
         if(is_string($column)){
           $value = $model->$column;
         } else if(is_array($column) && isset($column["value"])){
@@ -77,7 +82,15 @@ class Table extends \aug\base\Widget{
           $attribute = $column["attribute"];
           $value = $model->$attribute;
         }
-        $head .= Html::tag("td", $cellAttributes, $value);
+
+        $attributes = [];
+        if(is_array($column) && isset($column["attributes"])){
+          $attributes = $column["attributes"];
+        }
+
+        $attributes = Html::mergeAttributes($this->cellAttributes, $attributes);
+
+        $head .= Html::tag("td", $attributes, $value);
       }
       $head .= Html::closeTag("tr");
     }

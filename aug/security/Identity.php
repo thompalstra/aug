@@ -1,7 +1,7 @@
 <?php
 namespace aug\security;
 use aug\models\Role;
-class Identity extends \aug\base\Model implements IdentityInterface{
+class Identity extends \aug\db\Record implements IdentityInterface{
 
   public $isGuest = true;
 

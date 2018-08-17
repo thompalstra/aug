@@ -1,5 +1,5 @@
 <?php
-use aug\widgets\Nav;
+use aug\widgets\Taskbar;
 use common\assets\CommonAsset;
 use backend\main\assets\BackendAsset;
 
@@ -13,54 +13,67 @@ BackendAsset::register();
     <?=$this->head()?>
   </header>
   <body>
-    <main class="columns">
-      <section class="column sidebar">
-        <?=Nav::widget([
+    <main class="rows">
+      <section class="row main">
+        <?=$content?>
+      </section>
+      <section class="row menu">
+        <?=Taskbar::widget([
           "attributes" => [
-            "class" => "nav nav-sidebar left top bottom"
+            "class" => "taskbar taskbar-default left top bottom"
           ],
           "items" => [
             [
-              "label" => "Home",
-              "url" => "/"
-            ],
-            (!\Aug::$app->user->isGuest) ? [
-              "label" => "Me (" . \Aug::$app->user->username . ")",
+              "label" => "<i class='material-icons'>home</i>",
               "items" => [
                 [
-                  "label" => "Logout",
-                  "url" => "/logout"
-                ]
-              ]
-            ] : [],
-            [
-              "label" => "",
-              "attributes" => [
-                "class" => "separator"
-              ]
-            ],
-            [
-              "label" => "CMS",
-              "items" => [
-                (\Aug::$app->user->can("userCreate")) ? [
-                  "label" => "Create User",
-                  "url" => "/user/new"
-                ] : [],
-                (\Aug::$app->user->can("userView")) ? [
-                  "label" => "View users",
-                  "url" => "/user"
-                ] : [],
-                (\Aug::$app->user->can("roleView")) ? [
+                  "label" => "CMS",
+                  "items" => [
+                    [
+                      "label" => "Page",
+                      "items" => [
+                        [
+                          "label" => "Manage pages",
+                          "url" => "/page"
+                        ],
+                        [
+                          "label" => "Create page",
+                          "url" => "/page/new"
+                        ]
+                      ]
+                    ]
+                  ]
+                ],
+                [
+                  "label" => "Users",
+                  "items" => [
+                    [
+                      "label" => "Manage users",
+                      "url" => "/user"
+                    ],
+                    [
+                      "label" => "Create user",
+                      "url" => "/user/new"
+                    ],
+                  ]
+                ],
+                [
                   "label" => "Roles",
-                  "url" => "/roles"
-                ] : []
-              ]
-            ]
+                  "items" => [
+                    [
+                      "label" => "Manage roles",
+                      "url" => "/role"
+                    ],
+                    [
+                      "label" => "Create role",
+                      "url" => "/role/new"
+                    ],
+                  ]
+                ]
+              ],
+            ],
           ]
         ])?>
-      </section>
-      <section class="column main">
-        <?=$content?>
       </section>
     </main>
     <footer></footer>

@@ -1,6 +1,6 @@
 <?php
 namespace common\models;
-class UserAccount extends \aug\base\Model{
+class UserAccount extends \aug\db\Record{
   public static function rules(){
     return [
       [["first_name", "last_name", "nationality"], "required"],

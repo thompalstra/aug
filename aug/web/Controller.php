@@ -99,6 +99,11 @@ class Controller implements ControllerInterface{
     $view = new $viewClass();
     $view->render($name, $data);
   }
+  public function renderPartial($name, $data = []){
+    $viewClass = \Aug::$app->web["viewClass"];
+    $view = new $viewClass();
+    $view->renderPartial($name, $data);
+  }
   public function renderJson($data){
     echo json_encode($data); exit();
   }

@@ -1,12 +1,4 @@
-.page-section{
-  margin: 1rem 1rem;
-  padding: 1rem;
-  background-color: #fff;
-  border: 1px solid #ddd;
-}
-.page-section.page-header h1{
-  margin: 0;
-}
-.page-section h2{
-  margin: 0 0 1rem 0;
+.rows .row.main{
+  flex: 1;
+  background: #ddd;
 }

@@ -1,19 +1,21 @@
 <?php
 namespace aug\widgets;
 use aug\helpers\Html;
-class Nav extends \aug\base\Widget{
+class Taskbar extends \aug\base\Widget{
 
   protected $items = [];
-  protected $attributes = [];
+  protected $attributes = [
+    "class" => ["taskbar", "taskbar-default"]
+  ];
+  protected $itemAttributes = [
+    "class" => []
+  ];
   protected $_html = "";
 
   public function init($options = []){
     foreach($options as $k => $v){
       $this->$k = $v;
     }
-  }
-  public function openNav($options = []){
-    // return Html::openTag("nav", $options);
   }
   public function createItems($items = [], $attributes = []){
     $out = [];
@@ -23,15 +25,17 @@ class Nav extends \aug\base\Widget{
       if(empty($item)){
         continue;
       }
-      $attributes = isset($item["attributes"]) ? $item["attributes"] : [];
+
+      if(isset($item["attributes"])){
+        $attributes = Html::mergeAttributes($this->itemAttributes, $item["attributes"]);
+      } else {
+        $attributes = $this->itemAttributes;
+      }
 
       if(isset($item["items"])){
-        if(isset($attributes["class"])){
-          $attribute["class"] .= " has-children";
-        } else {
-          $attribute["class"] = "has-children";
-        }
+        $attributes["class"][] = "has-children";
       }
+
       $out[] = Html::openTag("li",$attributes);
       if(isset($item["url"])){
         $out[] = Html::tag("a", ["href"=>$item["url"]], $item["label"]);
@@ -45,9 +49,6 @@ class Nav extends \aug\base\Widget{
     }
     $out[] = Html::closeTag("ul");
     return implode("", $out);
-  }
-  public function closeNav(){
-    return Html::closeTag("nav");
   }
   public function toHtml(){
     $html = $this->createItems($this->items, $this->attributes);

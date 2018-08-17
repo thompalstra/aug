@@ -1,19 +1,26 @@
 html, body{
   margin: 0; padding: 0;
 }
+
+.rows,
 .columns{
   display: flex;
   flex-direction: row;
+  width: 100%;
   height: 100%;
+}
+.columns{
+  flex-direction: row;
 }
 .columns .column{
   flex: 1;
-  background-color: #ddd;
 }
 .columns .column.sidebar{
   flex: 0 200px;
-  background-color: #111;
 }
 .columns .column.main{
   padding: 10px;
+}
+.rows{
+  flex-direction: column;
 }
