@@ -48,7 +48,7 @@ class UserController extends \aug\web\Controller{
         }
       }
     }
-    return $this->renderFile("view", [
+    return $this->renderPartial("view", [
       "user" => $user,
       "account" => $account
     ]);

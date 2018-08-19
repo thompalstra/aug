@@ -77,11 +77,16 @@ class Application{
     Aug::$app->identity = new $identityClass();
     Aug::$app->identity->restore();
 
+    $requestClass = Aug::$app->web["requestClass"];
+
+    Aug::$app->request = new $requestClass();
+
     $controllerClass = Aug::$app->web["controllerClass"];
     $actionClass = Aug::$app->web["actionClass"];
 
     Aug::$app->controller = new $controllerClass();
     Aug::$app->action = new $actionClass("index", []);
+
     return $this;
   }
   public function run(){
@@ -90,7 +95,7 @@ class Application{
     $actionClass = Aug::$app->web["actionClass"];
     $requestClass = Aug::$app->web["requestClass"];
 
-    $route = $requestClass::handleRequest($_SERVER["REQUEST_URI"]);
+    $route = Aug::$app->request->handleRequest($_SERVER["REQUEST_URI"]);
 
     Aug::$app->controller = $controllerClass::parseRequest($route);
     Aug::$app->action = $actionClass::parseRequest($route);

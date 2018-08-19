@@ -1,6 +1,16 @@
 <?php
 namespace aug\web;
 class Request implements RequestInterface{
+
+  public function __construct(){
+    $uri = $_SERVER["REQUEST_URI"];
+    if(strpos($uri, "?")){
+      $uri = substr($uri, 0, strpos($uri, "?"));
+    }
+    $this->url = $uri;
+    $this->requestParams = $_GET;
+  }
+
   public static function toUrl($route){
     $uri = $route[0];
     $queryString = "";
@@ -9,7 +19,7 @@ class Request implements RequestInterface{
     }
     return "{$uri}{$queryString}";
   }
-  public static function handleRequest($uri){
+  public function handleRequest($uri){
     $default = \Aug::$app->web["default"];
     if(strpos($uri, "?")){
       $uri = substr($uri, 0, strpos($uri, "?"));

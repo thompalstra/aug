@@ -1,5 +1,5 @@
 <?php
-namespace aug\widgets;
+namespace aug\widgets\desktop;
 use aug\helpers\Html;
 class Taskbar extends \aug\base\Widget{
 
@@ -17,41 +17,53 @@ class Taskbar extends \aug\base\Widget{
       $this->$k = $v;
     }
   }
-  public function createItems($items = [], $attributes = []){
+  public function openTaskbar($attributes = []){
+    return Html::openTag("ul", $attributes);
+  }
+  public function createItems($items = []){
     $out = [];
 
-    $out[] = Html::openTag("ul", $attributes);
     foreach($items as $item){
       if(empty($item)){
         continue;
       }
 
-      if(isset($item["attributes"])){
-        $attributes = Html::mergeAttributes($this->itemAttributes, $item["attributes"]);
-      } else {
-        $attributes = $this->itemAttributes;
-      }
+      $attributes = $this->itemAttributes;
 
       if(isset($item["items"])){
         $attributes["class"][] = "has-children";
       }
 
+      $itemAttributes = [];
+      if(isset($item["attributes"])){
+        $itemAttributes = $item["attributes"];
+      }
+
+
       $out[] = Html::openTag("li",$attributes);
       if(isset($item["url"])){
-        $out[] = Html::tag("a", ["href"=>$item["url"]], $item["label"]);
+        $itemAttributes["href"] = $item["url"];
+        $out[] = Html::tag("a", $itemAttributes, $item["label"]);
       } else {
-        $out[] = Html::tag("span", [], $item["label"]);
+        $out[] = Html::tag("span", $itemAttributes, $item["label"]);
       }
       if(isset($item["items"])){
+        $out[] = Html::openTag("ul", []);
         $out[] = $this->createItems($item["items"]);
+        $out[] = Html::closeTag("ul");
       }
       $out[] = Html::closeTag("li");
     }
-    $out[] = Html::closeTag("ul");
+    //
     return implode("", $out);
   }
+  public function closeTaskbar(){
+    return Html::closeTag("ul");
+  }
   public function toHtml(){
-    $html = $this->createItems($this->items, $this->attributes);
+    $html = $this->openTaskbar($this->attributes);
+    $html .= $this->createItems($this->items);
+    $html .= $this->closeTaskbar();
     return $html;
   }
   public function run(){

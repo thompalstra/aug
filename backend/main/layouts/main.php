@@ -1,7 +1,9 @@
 <?php
-use aug\widgets\Taskbar;
 use common\assets\CommonAsset;
 use backend\main\assets\BackendAsset;
+
+use aug\widgets\desktop\Taskbar;
+use aug\widgets\desktop\Items;
 
 CommonAsset::register();
 BackendAsset::register();
@@ -13,14 +15,29 @@ BackendAsset::register();
     <?=$this->head()?>
   </header>
   <body>
-    <main class="rows">
-      <section class="row main">
-        <?=$content?>
-      </section>
-      <section class="row menu">
+    <main id="dt1" class="desktop desktop-default" style="background-image: url(http://getwallpapers.com/wallpaper/full/b/0/f/347985.jpg)">
+      <?=Items::widget([
+        "items" => [
+          [
+            "url" => "/user",
+            "icon" => "<i class='material-icons'>account_circle</i>",
+            "label" => "Users"
+          ],
+          [
+            "url" => "/user",
+            "icon" => "<i class='material-icons'>account_circle</i>",
+            "label" => "Users"
+          ],
+          [
+            "url" => "/user",
+            "icon" => "<i class='material-icons'>account_circle</i>",
+            "label" => "Users"
+          ]
+        ]
+      ])?>
         <?=Taskbar::widget([
           "attributes" => [
-            "class" => "taskbar taskbar-default left top bottom"
+            "class" => "desktop-taskbar"
           ],
           "items" => [
             [
@@ -34,11 +51,17 @@ BackendAsset::register();
                       "items" => [
                         [
                           "label" => "Manage pages",
-                          "url" => "/page"
+                          "url" => "/page",
+                          "attributes" => [
+                            "class" => ["desktop-window-open"]
+                          ]
                         ],
                         [
                           "label" => "Create page",
-                          "url" => "/page/new"
+                          "url" => "/page/new",
+                          "attributes" => [
+                            "class" => ["desktop-window-open"]
+                          ]
                         ]
                       ]
                     ]
@@ -49,11 +72,17 @@ BackendAsset::register();
                   "items" => [
                     [
                       "label" => "Manage users",
-                      "url" => "/user"
+                      "url" => "/user",
+                      "attributes" => [
+                        "class" => ["desktop-window-open"]
+                      ]
                     ],
                     [
                       "label" => "Create user",
-                      "url" => "/user/new"
+                      "url" => "/user/new",
+                      "attributes" => [
+                        "class" => ["desktop-window-open"]
+                      ]
                     ],
                   ]
                 ],
@@ -62,11 +91,17 @@ BackendAsset::register();
                   "items" => [
                     [
                       "label" => "Manage roles",
-                      "url" => "/role"
+                      "url" => "/role",
+                      "attributes" => [
+                        "class" => ["desktop-window-open"]
+                      ]
                     ],
                     [
                       "label" => "Create role",
-                      "url" => "/role/new"
+                      "url" => "/role/new",
+                      "attributes" => [
+                        "class" => ["desktop-window-open"]
+                      ]
                     ],
                   ]
                 ]
@@ -74,10 +109,15 @@ BackendAsset::register();
             ],
           ]
         ])?>
-      </section>
+      <!-- </section> -->
     </main>
     <footer></footer>
-    <script></script>
+    <script>
+      var dt = null;
+      document.addEventListener("DOMContentLoaded", function(e){
+        dt = new Desktop(document.getElementById("dt1"))
+      })
+    </script>
     <?=$this->footer()?>
   </body>
 </html>

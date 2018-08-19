@@ -3,12 +3,20 @@ use aug\widgets\Form;
 use aug\helpers\Html;
 $form = new Form();
 ?>
-
-<section class="container">
+<div class="window-bar">
+  <span><?= ($user->isNewRecord) ? "Create user" : "User '{$user->username}'"?></span>
+  <div class="window-actions">
+    <i class="window-action material-icons minimize">minimize</i>
+    <i class="window-action material-icons maximize">fullscreen</i>
+    <i class="window-action material-icons close">close</i>
+  </div>
+</div>
+<div class="window-content">
   <?=$form->begin([
     "attributes" => [
       "id" => "form-user-view",
       "method" => "POST",
+      "action" => \Aug::$app->request->url
     ]
   ])?>
   <div class="page-module module-white">
@@ -22,5 +30,6 @@ $form = new Form();
     <h2>Account</h2>
     <?=$this->renderPartial("partials/account", ["form" => $form,"account" => $account])?>
   </div>
+  <button type="submit">save</button>
   <?=$form->end()?>
-</section>
+</div>
