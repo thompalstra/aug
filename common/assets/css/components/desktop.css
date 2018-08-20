@@ -110,6 +110,15 @@
   overflow: auto;
   z-index: 1;
   box-shadow: var(--bs-1dp);
+  transform: scale(1);
+  transition: transform 200ms ease-in-out;
+}
+
+.desktop.desktop-default .desktop-window.minimize-out{
+  transform: scale(0);
+}
+.desktop.desktop-default .desktop-window.minimize-in{
+  transform: scale(1);
 }
 
 .desktop.desktop-default .desktop-window.focus{
