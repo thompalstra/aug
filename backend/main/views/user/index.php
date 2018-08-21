@@ -3,15 +3,15 @@ use aug\helpers\Html;
 use aug\widgets\Pager;
 use aug\widgets\Table;
 ?>
-<div class="window-bar">
+<!-- <div class="window-bar">
   <span>Manage users</span>
   <div class="window-actions">
     <i class="window-action material-icons minimize">minimize</i>
     <i class="window-action material-icons maximize">fullscreen</i>
     <i class="window-action material-icons close">close</i>
   </div>
-</div>
-<div class="window-content">
+</div> -->
+<!-- <div class="window-content"> -->
   <?=Pager::widget([
     "dataProvider" => $dataProvider
   ])?>
@@ -40,4 +40,4 @@ use aug\widgets\Table;
   <?=Pager::widget([
     "dataProvider" => $dataProvider
   ])?>
-</div>
+<!-- </div> -->

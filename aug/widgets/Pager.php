@@ -131,7 +131,7 @@ class Pager extends \aug\base\Widget{
       $out[] = Html::select($this->pageSizes, $pageSize, [
         "name" => "page-size",
         "class" => "pagination pagesize",
-        "onchange" => "this.form.submit()"
+        // "onchange" => "this.form.dispatchEvent(new CustomEvent('submit'),{cancelable:true,bubbles: true})"
       ]);
     }
     $out[] = Html::closeTag("div");

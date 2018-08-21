@@ -12,12 +12,12 @@ Node.prototype.on = function(eventTypes, a, b, c){
       this.addEventListener(eventType, a);
     } else if(typeof a === "string" && typeof b === "function"){
       this.addEventListener(eventType, function(originalEvent){
-        if(originalEvent.defaultPrevented){
-          return;
-        }
         target = originalEvent.target.matches(a) ? originalEvent.target : originalEvent.target.closest(a);
         if(target){
           b.call(target, originalEvent);
+        }
+        if(originalEvent.defaultPrevented){
+          return;
         }
       }.bind(this));
     }

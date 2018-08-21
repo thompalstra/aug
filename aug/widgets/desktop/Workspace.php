@@ -1,15 +1,11 @@
 <?php
 namespace aug\widgets\desktop;
 use aug\helpers\Html;
-class Items extends \aug\base\Widget{
-
-
+class Workspace extends \aug\base\Widget{
   protected $attributes = [
-    "class" => ["desktop-items"]
+    "class" => ["desktop-workspace"]
   ];
   protected $items = [];
-
-
   public function init($options = []){
     foreach($options as $k => $v){
       $this->$k = $v;
@@ -23,7 +19,7 @@ class Items extends \aug\base\Widget{
     foreach($items as $item){
       $out[] = Html::tag("a", [
         "href"=>$item["url"],
-        "class"=>["desktop-item", "desktop-window-open"],
+        "class"=>["shortcut", "desktop-window-open"],
       ], $item["icon"] . Html::tag("label", [], $item["label"]));
     }
     return implode($out);

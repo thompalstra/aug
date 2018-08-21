@@ -7,7 +7,7 @@
 
 /**ITEMS**/
 
-.desktop.desktop-default .desktop-items{
+.desktop.desktop-default .desktop-workspace{
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(64px, 64px));
   grid-template-rows: repeat(auto-fill, minmax(64px, 64px));
@@ -16,7 +16,7 @@
   flex: 1;
   padding: 1rem;
 }
-.desktop.desktop-default .desktop-item{
+.desktop.desktop-default .shortcut{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -30,7 +30,7 @@
   background: rgba(255,255,255,0);
   border: 2px solid rgba(255,255,255,0);
 }
-.desktop.desktop-default .desktop-item:hover{
+.desktop.desktop-default .shortcut:hover{
   background: rgba(255,255,255,.1);
   border: 1px solid rgba(0,0,0,.2);
 }
@@ -111,14 +111,13 @@
   z-index: 1;
   box-shadow: var(--bs-1dp);
   transform: scale(1);
-  transition: transform 200ms ease-in-out;
+  opacity: 1;
+  transition: transform 200ms ease-in-out, opacity 100ms ease-in-out;
 }
 
-.desktop.desktop-default .desktop-window.minimize-out{
+.desktop.desktop-default .desktop-window.minimized{
   transform: scale(0);
-}
-.desktop.desktop-default .desktop-window.minimize-in{
-  transform: scale(1);
+  opacity: 0;
 }
 
 .desktop.desktop-default .desktop-window.focus{
@@ -126,19 +125,26 @@
   box-shadow: var(--bs-12dp);
 }
 
-.desktop.desktop-default .desktop-window .window-bar{
+.desktop.desktop-default .desktop-window .titlebar{
   display: flex;
   justify-content: center;
   align-items: center;
   height: 32px;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+   -khtml-user-select: none; /* Konqueror HTML */
+     -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* Internet Explorer/Edge */
+          user-select: none; /* Non-prefixed version, currently
+                                supported by Chrome and Opera */
 }
-.desktop.desktop-default .desktop-window .window-bar .window-actions{
+.desktop.desktop-default .desktop-window .titlebar .window-actions{
   display: flex;
   flex: 0 auto;
   flex-direction: row;
   margin-left: auto;
 }
-.desktop.desktop-default .desktop-window .window-bar .window-actions .window-action{
+.desktop.desktop-default .desktop-window .titlebar .window-actions .window-action{
   display: flex;
   justify-content: center;
   align-items: center;
@@ -150,20 +156,20 @@
   border: 0;
   color: #111;
 }
-.desktop.desktop-default .desktop-window .window-bar > span{
+.desktop.desktop-default .desktop-window .titlebar > span{
   line-height: 32px;
   padding: 0 .5rem;
   flex: 1;
 }
-.desktop.desktop-default .desktop-window .window-bar .window-actions .window-action.close:hover{
+.desktop.desktop-default .desktop-window .titlebar .window-actions .window-action.close:hover{
   background-color: red;
   color: white;
 }
-.desktop.desktop-default .desktop-window .window-bar .window-actions .window-action.maximize:hover{
+.desktop.desktop-default .desktop-window .titlebar .window-actions .window-action.maximize:hover{
   background-color: rgba(0,0,0,.4);
   color: white;
 }
-.desktop.desktop-default .desktop-window .window-bar .window-actions .window-action.minimize:hover{
+.desktop.desktop-default .desktop-window .titlebar .window-actions .window-action.minimize:hover{
   background-color: rgba(0,0,0,.4);
   color: white;
 }
