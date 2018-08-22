@@ -56,5 +56,4 @@ Desktop.prototype.addEventListeners = function(){
       this.Desktop.getWorkspace().setDragWindow(null);
     }
   });
-
 }

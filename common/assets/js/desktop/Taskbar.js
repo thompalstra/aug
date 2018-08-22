@@ -2,6 +2,7 @@ let Taskbar = function(node, Desktop){
   this.setNode(node);
   this.setDesktop(Desktop);
   this.setTasksMap(new Map());
+  this.addEventListeners();
 }
 Taskbar.prototype.data = {};
 Taskbar.prototype.setNode = function(node){
@@ -44,8 +45,20 @@ Taskbar.prototype.focusTask = function(target){
 Taskbar.prototype.unfocusTask = function(target){
   target.focusOut();
 }
-
+Taskbar.prototype.addEventListeners = function(){
+  this.getNode().on("click", ".open-win", function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    let node = this;
+    let desktop = this.closest(".desktop").Desktop.getWorkspace().openWindow(this.dataset.href, this.dataset.title);
+  });
+}
 let Task = function(win, Taskbar){
+  this.data = {
+    node: null,
+    Window: null,
+    Taskbar: null
+  };
   this.setWindow(win);
   this.setIdentifier(win.getIdentifier());
   this.setTaskbar(Taskbar);
@@ -53,7 +66,6 @@ let Task = function(win, Taskbar){
   this.setNode(document.createElement("li"));
   this.addEventListeners();
 }
-Task.prototype.data = {};
 Task.prototype.setIdentifier = function(identifier){
   this.data.identifier = identifier
 }
@@ -90,6 +102,10 @@ Task.prototype.focusOut = function(){
 Task.prototype.addEventListeners = function(){
   this.getNode().addEventListener("click", function(e){
     let win = this.getWindow();
-    win.minimize();
+    if(!win.hasFocus() && !win.data.isMinimized){
+      win.getWorkspace().focusWindow(win);
+    } else {
+      win.minimize();
+    }
   }.bind(this));
 }

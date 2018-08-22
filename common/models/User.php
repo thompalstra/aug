@@ -12,7 +12,6 @@ class User extends \aug\security\Identity{
       [["password"], "passwordValidator", "min"=>4,"max"=>32]
     ];
   }
-
   public static function tableName(){
     return "user";
   }
@@ -24,7 +23,6 @@ class User extends \aug\security\Identity{
       "account.nationality" => "Nationality",
       "is_enabled" => "Enabled"
     ];
-
   }
   public function getAccount(){
     $account = UserAccount::find()

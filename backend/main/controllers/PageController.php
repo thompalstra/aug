@@ -4,7 +4,7 @@ use aug\data\DataProvider;
 use common\models\Page;
 class PageController extends \aug\web\Controller{
   public function actionIndex(){
-    return $this->render("index", [
+    return $this->renderPartial("index", [
       "dataProvider" => new DataProvider([
         "query" => $this->getModels(),
         "pagination" => $this->getPagination()
@@ -13,7 +13,7 @@ class PageController extends \aug\web\Controller{
   }
   public function actionView($id){
     $page = $this->getModel($id);
-    return $this->render("view", [
+    return $this->renderPartial("view", [
       "page" => $page,
       "content" => $page->content
     ]);

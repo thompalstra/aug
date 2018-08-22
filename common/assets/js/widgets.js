@@ -6,10 +6,10 @@
 //   this.addEventListeners();
 // }
 // Desktop.prototype.addEventListeners = function(){
-//   this.node.on("click", ".desktop-window-open", function(event){
+//   this.node.on("click", ".open-win", function(event){
 //     event.preventDefault();
 //     event.stopPropagation();
-//     let gridItem = event.target.matches(".desktop-window-open") ? event.target : event.target.closest(".desktop-window-open");
+//     let gridItem = event.target.matches(".open-win") ? event.target : event.target.closest(".open-win");
 //     let href = gridItem.getAttribute("href");
 //     let identifier = "desktop-window-" + href.replace(/\//g, "-").replace(/\./g,"-");
 //     if(this.DesktopItems.windowExists(identifier)){

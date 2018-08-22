@@ -48,66 +48,33 @@ BackendAsset::register();
                 "label" => "CMS",
                 "items" => [
                   [
-                    "label" => "Page",
-                    "items" => [
-                      [
-                        "label" => "Manage pages",
-                        "url" => "/page",
-                        "attributes" => [
-                          "class" => ["desktop-window-open"]
-                        ]
-                      ],
-                      [
-                        "label" => "Create page",
-                        "url" => "/page/new",
-                        "attributes" => [
-                          "class" => ["desktop-window-open"]
-                        ]
-                      ]
+                    "label" => "Pages",
+                    "attributes" => [
+                      "class" => ["open-win"],
+                      "data-href" => "/page",
+                      "data-title" => "Manage pages"
+                    ]
+                  ],
+                  [
+                    "label" => "Users",
+                    "attributes" => [
+                      "class" => ["open-win"],
+                      "data-href" => "/user",
+                      "data-title" => "Manage users"
+                    ]
+                  ],
+                  [
+                    "label" => "Roles",
+                    "attributes" => [
+                      "class" => ["open-win"],
+                      "data-href" => "/role",
+                      "data-title" => "Manage roles"
                     ]
                   ]
                 ]
-              ],
-              [
-                "label" => "Users",
-                "items" => [
-                  [
-                    "label" => "Manage users",
-                    "url" => "/user",
-                    "attributes" => [
-                      "class" => ["desktop-window-open"]
-                    ]
-                  ],
-                  [
-                    "label" => "Create user",
-                    "url" => "/user/new",
-                    "attributes" => [
-                      "class" => ["desktop-window-open"]
-                    ]
-                  ],
-                ]
-              ],
-              [
-                "label" => "Roles",
-                "items" => [
-                  [
-                    "label" => "Manage roles",
-                    "url" => "/role",
-                    "attributes" => [
-                      "class" => ["desktop-window-open"]
-                    ]
-                  ],
-                  [
-                    "label" => "Create role",
-                    "url" => "/role/new",
-                    "attributes" => [
-                      "class" => ["desktop-window-open"]
-                    ]
-                  ],
-                ]
               ]
-            ],
-          ],
+            ]
+          ]
         ]
       ])?>
     </main>

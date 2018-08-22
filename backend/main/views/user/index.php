@@ -32,7 +32,7 @@ use aug\widgets\Table;
       [
         "label" => "das",
         "value" => function($model){
-          return Html::a("<i class='material-icons'>search</i>", ["/user/{$model->id}"], ["class"=>["desktop-window-open"]]);
+          return Html::a("<i class='material-icons'>search</i>", ["/user/{$model->id}"], ["class"=>["open-win"]]);
         }
       ]
     ]

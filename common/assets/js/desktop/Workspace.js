@@ -26,21 +26,23 @@ Workspace.prototype.getWindowsMap = function(){
 
 Workspace.prototype.createIdentifier = function(url){
   var url = "desktop-window-" + url.replace(/\//g, "-").replace(/\./g,"-");
+  console.log(url);
   return url;
 }
 Workspace.prototype.addWindow = function(win){
   this.getWindowsMap().set(win.getIdentifier(), win);
   return win;
 }
-Workspace.prototype.openWindow = function(url){
+Workspace.prototype.openWindow = function(url, title){
   let identifier = this.createIdentifier(url);
-  let win = this.addWindow(new Win(this, identifier, "test"));
+  let win = this.addWindow(new Win(this, identifier, title));
   this.getDesktop()
     .getTaskbar()
     .addTaskByWindow(win);
   return win.loadFromURL(url)
     .then(function(){
       this.getNode().appendChild(win.getNode());
+      this.focusWindow(win);
     }.bind(this));
 }
 Workspace.prototype.removeWindow = function(win){
@@ -84,6 +86,21 @@ Workspace.prototype.getDragWindow = function(win){
   return this.data.dragWindow;
 }
 let Win = function(Workspace, identifier, title){
+  this.data = {
+    isFullScreen: false,
+    isMinimized: false,
+    previousSize: {
+      x: null,
+      y: null,
+      w: null,
+      h: null
+    },
+    dragOffset: {
+      x: null,
+      y: null
+    },
+    nodes: {}
+  };
   this.setWorkspace(Workspace);
   this.setIdentifier(identifier);
   this.setTitle(title);
@@ -91,17 +108,6 @@ let Win = function(Workspace, identifier, title){
   this.getNode().setAttribute("id", identifier);
   this.addEventListeners();
 }
-Win.prototype.data = {
-  isFullScreen: false,
-  isMinimized: false,
-  previousSize: {
-    x: null,
-    y: null,
-    w: null,
-    h: null
-  },
-  nodes: {}
-};
 Win.prototype.setTask = function(Task){
   this.data.Task = Task;
 }
@@ -257,6 +263,9 @@ Win.prototype.maximize = function(e){
     this.getMaximizeNode().innerHTML = "fullscreen";
     this.data.isFullScreen = false;
   }
+}
+Win.prototype.hasFocus = function(){
+  return this.getNode().classList.contains("focus");
 }
 Win.prototype.focusIn = function(){
   this.getNode().classList.add("focus");

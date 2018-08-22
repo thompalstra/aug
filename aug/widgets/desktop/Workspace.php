@@ -19,7 +19,7 @@ class Workspace extends \aug\base\Widget{
     foreach($items as $item){
       $out[] = Html::tag("a", [
         "href"=>$item["url"],
-        "class"=>["shortcut", "desktop-window-open"],
+        "class"=>["shortcut", "open-win"],
       ], $item["icon"] . Html::tag("label", [], $item["label"]));
     }
     return implode($out);
