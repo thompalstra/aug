@@ -52,6 +52,14 @@ Taskbar.prototype.addEventListeners = function(){
     let node = this;
     let desktop = this.closest(".desktop").Desktop.getWorkspace().openWindow(this.dataset.href, this.dataset.title);
   });
+  this.getNode().on("click", ".open-win", function(e){
+    this.getNode().find("li.open").forEach(function(node){
+      node.classList.remove("open");
+    })
+  }.bind(this));
+  this.getNode().on("click", "li", function(e){
+    this.classList.toggle("open");
+  });
 }
 let Task = function(win, Taskbar){
   this.data = {

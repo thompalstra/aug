@@ -91,7 +91,7 @@
   left: 100%;
 }
 
-.desktop.desktop-default .desktop-taskbar li:hover > ul{
+.desktop.desktop-default .desktop-taskbar li.open > ul{
   opacity: 1;
   visibility: visible;
   pointer-events: all;
