@@ -102,4 +102,20 @@ class Application{
 
     Aug::$app->controller->runAction(Aug::$app->action);
   }
+  public function setFlash($key, $message){
+    if(!isset($_SESSION["flash"])){
+      $_SESSION["flash"] = [];
+    }
+    $_SESSION["flash"][$key] = $message;
+  }
+  public function getFlash($key){
+    if(isset($_SESSION["flash"]) && isset($_SESSION["flash"][$key])){
+      ob_start();
+      echo $_SESSION["flash"][$key];
+      $flash = ob_get_contents();
+      ob_end_clean();
+      unset($_SESSION["flash"][$key]);
+      return $flash;
+    }
+  }
 }

@@ -29,6 +29,7 @@ Desktop.prototype.getTaskbar = function(){
   return this.data.Taskbar;
 }
 Desktop.prototype.focusWindow = function(win){
+  console.log("focus");
   if(win instanceof Win){
     this.getTaskbar().focusTask(win.getTask());
     this.getWorkspace().focusWindow(win);
@@ -37,12 +38,9 @@ Desktop.prototype.focusWindow = function(win){
     this.getWorkspace().focusWindow(null);
   }
 }
-Desktop.prototype.unfocusWindow = function(win){
-  this.getTaskbar().unfocusTask(win.getTask());
-  this.getWorkspace().unfocusWindow(win);
-}
 Desktop.prototype.addEventListeners = function(){
   this.getNode().on("mousedown", ".desktop-window .titlebar span", function(event){
+    event.preventDefault(); event.stopPropagation();
     this.parentNode.parentNode.win.getWorkspace().getDesktop().focusWindow(this.parentNode.parentNode.win);
     this.parentNode.parentNode.win.getWorkspace().setDragWindow(this.parentNode.parentNode.win, event);
   });
@@ -55,5 +53,11 @@ Desktop.prototype.addEventListeners = function(){
     if(this.Desktop.getWorkspace().getDragWindow()){
       this.Desktop.getWorkspace().setDragWindow(null);
     }
+  });
+  this.getNode().on("click", ".open-win", function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    let node = this;
+    let desktop = this.closest(".desktop").Desktop.getWorkspace().openWindow(this.dataset.href, this.dataset.title);
   });
 }

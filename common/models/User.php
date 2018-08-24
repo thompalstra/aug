@@ -58,8 +58,6 @@ class User extends \aug\security\Identity{
         if(!$model->hasErrors()){
           $model->password_hash = Security::passwordHash($password);
         }
-    } else {
-      $model->addError($attribute, "Password is required");
     }
   }
 }

@@ -80,11 +80,13 @@ class Controller implements ControllerInterface{
           foreach($reflection->getParameters() as $arg){
             if(isset($action->params[$arg->name])){
               $params[] = $action->params[$arg->name];
-            } else {
-              $params[] = null;
             }
           }
-          call_user_func_array([$this, $action->name], $params);
+          if(count($params) == count($reflection->getParameters())){
+            call_user_func_array([$this, $action->name], $params);
+          } else {
+            $this->runError(new \Exception("Invalid parameters provided for {$action->name}"));
+          }
         } else {
           $this->runError(new \Exception("{$action->name} does not exist"));
         }

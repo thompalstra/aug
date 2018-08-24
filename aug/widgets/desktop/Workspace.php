@@ -5,6 +5,9 @@ class Workspace extends \aug\base\Widget{
   protected $attributes = [
     "class" => ["desktop-workspace"]
   ];
+  protected $itemAttributes = [
+    "class"=> ["shortcut", "open-win"],
+  ];
   protected $items = [];
   public function init($options = []){
     foreach($options as $k => $v){
@@ -17,10 +20,17 @@ class Workspace extends \aug\base\Widget{
   public function createItems($items = []){
     $out = [];
     foreach($items as $item){
-      $out[] = Html::tag("a", [
-        "href"=>$item["url"],
-        "class"=>["shortcut", "open-win"],
-      ], $item["icon"] . Html::tag("label", [], $item["label"]));
+      $attributes = $this->itemAttributes;
+      if(isset($item["attributes"])){
+        $attributes = Html::mergeAttributes($attributes, $item["attributes"]);
+      }
+
+      if(isset($item["url"])){
+        $attributes["href"] = $item["url"];
+        $out[] = Html::tag("a", $attributes, $item["icon"] . Html::tag("label", [], $item["label"]));
+      } else {
+        $out[] = Html::tag("span", $attributes, $item["icon"] . Html::tag("label", [], $item["label"]));
+      }
     }
     return implode($out);
   }

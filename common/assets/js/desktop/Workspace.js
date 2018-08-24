@@ -23,11 +23,38 @@ Workspace.prototype.setWindowsMap = function(map){
 Workspace.prototype.getWindowsMap = function(){
   return this.data.map;
 }
+Workspace.prototype.createRange = function(start, end){
+  let out = [];
+  end = (typeof end === "string") ? end.charCodeAt(0) : end;
+  start = (typeof start === "string") ? start.charCodeAt(0) : start;
+  if(start > end){
+    for(let current = start; current <= end; current--){
+      out.push(String.fromCharCode(current));
+    }
+  } else {
+    for(let current = start; current <= end; current++){
+      out.push(String.fromCharCode(current));
+    }
+  }
+  return out;
+}
+Workspace.prototype.createUniqueId = function(length){
+  let range = dt.getWorkspace().createRange("a", "x")
+    .concat(dt.getWorkspace().createRange("A", "X"))
+    .concat(dt.getWorkspace().createRange("0", "9"));
 
-Workspace.prototype.createIdentifier = function(url){
-  var url = "desktop-window-" + url.replace(/\//g, "-").replace(/\./g,"-");
-  console.log(url);
-  return url;
+  let out = [];
+  for(let i = 0; i < length; i++){
+    var index = Math.floor(Math.random() * (length - 0 + 1)) + 0;
+    out.push(range[index]);
+  }
+  return out.join("");
+}
+Workspace.prototype.createIdentifier = function(){
+  let identifier;
+  for(identifier = this.createUniqueId(32);this.getWindowsMap().get(identifier);){
+  }
+  return identifier;
 }
 Workspace.prototype.addWindow = function(win){
   this.getWindowsMap().set(win.getIdentifier(), win);
@@ -36,13 +63,14 @@ Workspace.prototype.addWindow = function(win){
 Workspace.prototype.openWindow = function(url, title){
   let identifier = this.createIdentifier(url);
   let win = this.addWindow(new Win(this, identifier, title));
+  this.getDesktop().getTaskbar().closeMenu();
   this.getDesktop()
     .getTaskbar()
     .addTaskByWindow(win);
   return win.loadFromURL(url)
     .then(function(){
       this.getNode().appendChild(win.getNode());
-      this.focusWindow(win);
+      this.getDesktop().focusWindow(win);
     }.bind(this));
 }
 Workspace.prototype.removeWindow = function(win){
@@ -57,8 +85,10 @@ Workspace.prototype.focusWindow = function(target){
   this.getWindowsMap().forEach(function(win){
     if(target !== null && win.getIdentifier() == target.getIdentifier() ){
       win.focusIn();
+      win.getTask().focusIn();
     } else {
       win.focusOut();
+      win.getTask().focusOut();
     }
   });
 }
@@ -84,6 +114,28 @@ Workspace.prototype.moveDragWindow = function(event){
 }
 Workspace.prototype.getDragWindow = function(win){
   return this.data.dragWindow;
+}
+Workspace.prototype.ensureVisible = function(win){
+  let node = win.getNode();
+  let nodeBoundingClientRect = node.getBoundingClientRect();
+  let workspaceNode = this.getNode();
+  let workspaceNodeBoundingClientRect = workspaceNode.getBoundingClientRect();
+  if(nodeBoundingClientRect.top < 0){
+    node.style.top = 0 + "px";
+  } else if(nodeBoundingClientRect.top > workspaceNodeBoundingClientRect.height){
+    node.style.top = workspaceNodeBoundingClientRect.height - nodeBoundingClientRect.height + "px";
+  }
+  if(nodeBoundingClientRect.left < 0){
+    node.style.left = 0 + "px";
+  } else if(nodeBoundingClientRect.left > workspaceNodeBoundingClientRect.width){
+    node.style.left = workspaceNodeBoundingClientRect.width - nodeBoundingClientRect.width;
+  }
+  if(nodeBoundingClientRect.width > workspaceNodeBoundingClientRect.width){
+    node.style.width = workspaceNodeBoundingClientRect.width + "px";
+  }
+  if(nodeBoundingClientRect.height > workspaceNodeBoundingClientRect.height){
+    node.style.height = workspaceNodeBoundingClientRect.height + "px";
+  }
 }
 let Win = function(Workspace, identifier, title){
   this.data = {
@@ -177,9 +229,9 @@ Win.prototype.getContentNode = function(){
 Win.prototype.setActionsNode = function(node){
   this.data.nodes.actions = node;
   this.getActionsNode().className = "window-actions";
-  this.setMinimizeNode(document.createElement("i"));
-  this.setMaximizeNode(document.createElement("i"));
-  this.setCloseNode(document.createElement("i"));
+  this.setMinimizeNode(document.createElement("span"));
+  this.setMaximizeNode(document.createElement("span"));
+  this.setCloseNode(document.createElement("span"));
 }
 Win.prototype.getActionsNode = function(){
   return this.data.nodes.actions;
@@ -187,9 +239,10 @@ Win.prototype.getActionsNode = function(){
 Win.prototype.setCloseNode = function(node){
   this.data.nodes.close = node;
   this.getActionsNode().appendChild(this.getCloseNode());
+  this.getCloseNode().setAttribute("title", "close");
   this.getCloseNode().win = this;
-  this.getCloseNode().className = "window-action material-icons close";
-  this.getCloseNode().innerHTML = "close";
+  this.getCloseNode().className = "window-action close";
+  // this.getCloseNode().innerHTML = "close";
 }
 Win.prototype.getCloseNode = function(node){
   return this.data.nodes.close;
@@ -197,9 +250,9 @@ Win.prototype.getCloseNode = function(node){
 Win.prototype.setMinimizeNode = function(node){
   this.data.nodes.minimize = node;
   this.getActionsNode().appendChild(this.getMinimizeNode());
+  this.getMinimizeNode().setAttribute("title", "minimize");
   this.getMinimizeNode().win = this;
-  this.getMinimizeNode().className = "window-action material-icons minimize";
-  this.getMinimizeNode().innerHTML = "minimize";
+  this.getMinimizeNode().className = "window-action minimize";
 }
 Win.prototype.getMinimizeNode = function(node){
   return this.data.nodes.minimize;
@@ -207,9 +260,9 @@ Win.prototype.getMinimizeNode = function(node){
 Win.prototype.setMaximizeNode = function(node){
   this.data.nodes.maximize = node;
   this.getActionsNode().appendChild(this.getMaximizeNode());
+  this.getMaximizeNode().setAttribute("title", "maximize");
   this.getMaximizeNode().win = this;
-  this.getMaximizeNode().className = "window-action material-icons maximize";
-  this.getMaximizeNode().innerHTML = "fullscreen";
+  this.getMaximizeNode().className = "window-action maximize";
 }
 Win.prototype.getMaximizeNode = function(node){
   return this.data.nodes.maximize;
@@ -230,7 +283,7 @@ Win.prototype.minimize = function(e){
     this.getWorkspace().getDesktop().focusWindow(this);
   } else {
     this.getNode().classList.add("minimized");
-    this.getWorkspace().getDesktop().unfocusWindow(this);
+    this.getWorkspace().focusWindow(null);
     this.data.isMinimized = true;
   }
 }
@@ -240,7 +293,9 @@ Win.prototype.maximize = function(e){
       this.minimize();
     }
     let computed = getComputedStyle(this.getNode());
-    let workspaceNode = getComputedStyle(this.getWorkspace().getNode());
+    // let workspaceNode = getComputedStyle(this.getWorkspace().getNode());
+    let workspaceNode = this.getWorkspace().getNode();
+    let workspaceNodeBoundingClientRect = workspaceNode.getBoundingClientRect();
     this.data.previousSize = {
       x: computed.getPropertyValue("left"),
       y: computed.getPropertyValue("top"),
@@ -250,9 +305,8 @@ Win.prototype.maximize = function(e){
     let node = this.getNode();
     node.style.left = 0;
     node.style.top = 0;
-    node.style.width = workspaceNode.width;
-    node.style.height = workspaceNode.height;
-    this.getMaximizeNode().innerHTML = "fullscreen_exit";
+    node.style.width = workspaceNodeBoundingClientRect.width;
+    node.style.height = workspaceNodeBoundingClientRect.height;
     this.data.isFullScreen = true;
   } else {
     let node = this.getNode();
@@ -260,7 +314,6 @@ Win.prototype.maximize = function(e){
     node.style.top = this.data.previousSize.y;
     node.style.width = this.data.previousSize.w;
     node.style.height = this.data.previousSize.h;
-    this.getMaximizeNode().innerHTML = "fullscreen";
     this.data.isFullScreen = false;
   }
 }
@@ -284,7 +337,9 @@ Win.prototype.loadFromURL = function(url){
 }
 Win.prototype.addEventListeners = function(){
   this.getNode().addEventListener("click", function(e){
-    this.getWorkspace().focusWindow(this);
+    if(!this.hasFocus()){
+      this.getWorkspace().focusWindow(this);
+    }
   }.bind(this))
   this.getCloseNode().addEventListener("click", function(e){
     e.preventDefault(); e.stopPropagation();
@@ -298,4 +353,61 @@ Win.prototype.addEventListeners = function(){
     e.preventDefault(); e.stopPropagation();
     this.maximize();
   }.bind(this));
+  this.getNode().on("click", "form button", function(e){
+    e.preventDefault(); e.stopPropagation();
+    let data = this.form.serialize();
+    let params = { method: this.form.method };
+    let url = this.form.action;
+    if(this.form.method.toLowerCase() == "get"){
+      if(url.indexOf("?") !== -1){
+        url = url.substring(0, url.indexOf("?"))
+      }
+      url += "?" + data;
+      if(this.name.length > 0){
+        url += "&" + encodeURI(this.name) + "=" + encodeURI(this.value);
+      }
+    } else {
+      if(this.name.length > 0){
+        data += "&" + encodeURI(this.name) + "=" + encodeURI(this.value);
+      }
+      params.body = data;
+      params.headers = new Headers({
+        'Content-Type': 'application/x-www-form-urlencoded'
+      });
+    }
+
+    console.log("click",url, params);
+    fetch(url, params)
+      .then(function(res){
+        return res.text();
+      }.bind(this))
+      .then(function(text){
+        this.closest('.desktop-window').win.getContentNode().innerHTML = text;
+      }.bind(this));
+  });
+  this.getNode().on("submit", "form", function(e){
+    e.preventDefault(); e.stopPropagation();
+    let data = this.form.serialize();
+    let params = { method: this.form.method };
+    let url = this.form.action;
+    if(this.form.method.toLowerCase() == "get"){
+      if(url.indexOf("?") !== -1){
+        url = url.substring(0, url.indexOf("?"))
+      }
+      url += "?" + data;
+    } else {
+      params.body = data;
+      params.headers = new Headers({
+        'Content-Type': 'application/x-www-form-urlencoded'
+      });
+    }
+    console.log("submit", url, params);
+    fetch(url, params)
+      .then(function(res){
+        return res.text();
+      }.bind(this))
+      .then(function(text){
+        this.closest('.desktop-window').win.getContentNode().innerHTML = text;
+      }.bind(this));
+  });
 }

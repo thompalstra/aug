@@ -36,3 +36,15 @@ Node.prototype.do = function(eventType, options){
   this.dispatchEvent(ce);
   return ce;
 }
+
+HTMLFormElement.prototype.serialize = function(){
+  let output = [];
+  for(let i = 0; i < this.elements.length; i++){
+    let element = this.elements[i];
+    if(["button"].indexOf(element.tagName.toLowerCase()) == -1){
+      console.log(encodeURI(element.name) + "=" + encodeURI(element.value));
+      output.push(encodeURI(element.name) + "=" + encodeURI(element.value));
+    }
+  }
+  return output.join("&");
+}

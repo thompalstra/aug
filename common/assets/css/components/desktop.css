@@ -1,27 +1,63 @@
+/**VARIABLES**/
+:root{
+  --desktop-titlebar-bg: #111;
+  --desktop-titlebar-fg: #f2f2f2;
+  --desktop-taskbar-bg: #111;
+  --desktop-taskbar-fg: #f2f2f2;
+  --desktop-shortcut-bg: #111;
+  --desktop-shortcut-fg: #f2f2f2;
+
+  --desktop-border-bottom: 1px solid #ddd;
+
+  --desktop-light-turqoise: #1abc9c;
+  --desktop-turqoise: #16a085;
+
+  --desktop-light-green: #27ae60;
+  --desktop-green: #27ae60;
+
+  --desktop-light-blue: #3498db;
+  --desktop-blue: #2980b9;
+
+  --desktop-light-purple: #9b59b6;
+  --desktop-purple: #8e44ad;
+
+  --desktop-light-orange: #e67e22;
+  --desktop-orange: #d35400;
+
+  --desktop-light-red: #e74c3c;
+  --desktop-red: #c0392b;
+}
+
+/**TRANSITIONS AND ANIMATIONS**/
+.desktop.desktop-default .desktop-window,
+.desktop.desktop-default .desktop-taskbar li{
+  transition: transform 200ms ease-in-out, opacity 100ms ease-in-out;
+}
+
 .desktop.desktop-default{
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
-
 /**ITEMS**/
-
 .desktop.desktop-default .desktop-workspace{
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(64px, 64px));
   grid-template-rows: repeat(auto-fill, minmax(64px, 64px));
   grid-row-gap: 1rem;
   grid-column-gap: 1rem;
+  justify-content: center;
+  align-content: center;
   flex: 1;
-  padding: 1rem;
 }
 .desktop.desktop-default .shortcut{
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 56px;
+  height: 100%;
   width: 100%;
   text-decoration: none;
   box-sizing: border-box;
@@ -42,19 +78,29 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  color: white;
-  background: rgba(0,0,0,.9);
+  background: var(--desktop-taskbar-bg);
+  color: var(--desktop-taskbar-fg);
 }
 .desktop.desktop-default .desktop-taskbar{
   display: flex;
 }
 .desktop.desktop-default .desktop-taskbar li{
   flex: 0 auto;
-  padding: 1rem;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.desktop.desktop-default .desktop-taskbar li:hover{
+  background-color: rgba(255,255,255,.1);
+}
+.desktop.desktop-default .desktop-taskbar li:active,
+.desktop.desktop-default .desktop-taskbar li.open{
+  background-color: rgba(255,255,255,.2);
+}
+.desktop.desktop-default .desktop-taskbar li.focus{
+  background-color: #4f9da6;
 }
 .desktop.desktop-default .desktop-taskbar ul li{
   display: inline-flex;
@@ -64,17 +110,28 @@
   min-width: 150px;
   cursor: pointer;
 }
-
+.desktop.desktop-default .desktop-taskbar > li > a,
+.desktop.desktop-default .desktop-taskbar > li > span{
+  padding: 1rem;
+  line-height: 24px;
+}
 .desktop.desktop-default .desktop-taskbar ul li > a,
 .desktop.desktop-default .desktop-taskbar ul li > span{
+  padding: 1rem;
   color: inherit;
   text-decoration: none;
   min-width: 150px;
 }
 
+.desktop.desktop-default .desktop-taskbar a,
+.desktop.desktop-default .desktop-taskbar span{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 .desktop.desktop-default .desktop-taskbar > ul li li{
   min-width: 150px;
-
 }
 .desktop.desktop-default .desktop-taskbar li ul{
   display: flex;
@@ -96,7 +153,9 @@
   visibility: visible;
   pointer-events: all;
 }
-
+.desktop.desktop-default .desktop-taskbar .taskbar-task span{
+  padding: 1rem;
+}
 /**WINDOWS**/
 
 .desktop.desktop-default .desktop-window{
@@ -106,13 +165,15 @@
   left: 0;
   display: flex;
   flex-direction: column;
-  resize: both;
   overflow: auto;
   z-index: 1;
   box-shadow: var(--bs-1dp);
   transform: scale(1);
   opacity: 1;
-  transition: transform 200ms ease-in-out, opacity 100ms ease-in-out;
+
+  max-width: 100%;
+  max-height: 100%;
+  resize: both;
 }
 
 .desktop.desktop-default .desktop-window.minimized{
@@ -127,9 +188,12 @@
 
 .desktop.desktop-default .desktop-window .titlebar{
   display: flex;
+  flex: 0 auto;
   justify-content: center;
   align-items: center;
   height: 32px;
+  background: var(--desktop-titlebar-bg);
+  color: var(--desktop-titlebar-fg);
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
    -khtml-user-select: none; /* Konqueror HTML */
@@ -143,36 +207,70 @@
   flex: 0 auto;
   flex-direction: row;
   margin-left: auto;
+  padding: 0 4px;
 }
 .desktop.desktop-default .desktop-window .titlebar .window-actions .window-action{
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0;
+  margin: 4px;
   padding: 0;
-  height: 32px;
-  width: 32px;
+  height: 16px;
+  width: 16px;
   background: transparent;
   border: 0;
   color: #111;
+  opacity: .8;
+  cursor: pointer;
+}
+.desktop.desktop-default .desktop-window .titlebar .window-actions .window-action:hover{
+  opacity: 1;
 }
 .desktop.desktop-default .desktop-window .titlebar > span{
+  display: flex;
+  align-items: center;
   line-height: 32px;
   padding: 0 .5rem;
   flex: 1;
 }
-.desktop.desktop-default .desktop-window .titlebar .window-actions .window-action.close:hover{
-  background-color: red;
-  color: white;
+.desktop.desktop-default .desktop-window .titlebar .window-actions .window-action{
+  border-radius: 100%;
 }
-.desktop.desktop-default .desktop-window .titlebar .window-actions .window-action.maximize:hover{
-  background-color: rgba(0,0,0,.4);
-  color: white;
+
+.desktop.desktop-default .desktop-window .titlebar .window-actions .window-action.close{
+  background: var(--desktop-red);
 }
-.desktop.desktop-default .desktop-window .titlebar .window-actions .window-action.minimize:hover{
-  background-color: rgba(0,0,0,.4);
-  color: white;
+.desktop.desktop-default .desktop-window .titlebar .window-actions .window-action.maximize{
+  background: var(--desktop-green);
 }
-.desktop.desktop-default .desktop-window .window-content{
-  paddinG: 1rem;
+.desktop.desktop-default .desktop-window .titlebar .window-actions .window-action.minimize{
+  background: var(--desktop-orange);
+}
+.desktop.desktop-default .desktop-window .content{
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.desktop.desktop-default .desktop-taskbar .taskbar-task .task-contextmenu{
+  position: fixed;
+  opacity: 1;
+  bottom: auto;
+  right: auto;
+  visibility: visible;
+  pointer-events: all;
+  background-color: #fff;
+  color: #111;
+  box-shadow: var(--bs-4dp);
+  z-index: 1000;
+}
+.desktop.desktop-default .desktop-taskbar .taskbar-task .task-contextmenu li{
+  position: static;
+  cursor: pointer;
+}
+.desktop.desktop-default .desktop-taskbar .taskbar-task .task-contextmenu li{
+}
+.desktop.desktop-default .desktop-taskbar .taskbar-task .task-contextmenu span{
+  padding: .5rem 0;
+  margin: 0 .5rem;
 }

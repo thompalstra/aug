@@ -41,6 +41,7 @@ class UserController extends \aug\web\Controller{
               $account->user_id = $user->id;
             }
             $account->save(false);
+            \Aug::$app->setFlash("user-view-saved", "User has been saved!");
             if($redirect){
               return $this->redirect("/user/{$user->id}");
             }

@@ -32,7 +32,13 @@ use aug\widgets\Table;
       [
         "label" => "das",
         "value" => function($model){
-          return Html::a("<i class='material-icons'>search</i>", ["/user/{$model->id}"], ["class"=>["open-win"]]);
+          return Html::a("<i class='material-icons'>search</i>", [""],
+            [
+              "class"=>["open-win"],
+              "data-href" => "/user/{$model->id}",
+              "data-title" => "User {$model->username}"
+            ]
+          );
         }
       ]
     ]

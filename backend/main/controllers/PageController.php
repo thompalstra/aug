@@ -3,6 +3,11 @@ namespace backend\main\controllers;
 use aug\data\DataProvider;
 use common\models\Page;
 class PageController extends \aug\web\Controller{
+  /**
+  * page/index
+  *
+  * @return html
+  */
   public function actionIndex(){
     return $this->renderPartial("index", [
       "dataProvider" => new DataProvider([
@@ -11,6 +16,12 @@ class PageController extends \aug\web\Controller{
       ])
     ]);
   }
+  /**
+  * page/view
+  *
+  * @param  int id
+  * @return html
+  */
   public function actionView($id){
     $page = $this->getModel($id);
     return $this->renderPartial("view", [
