@@ -78,8 +78,13 @@ class Controller implements ControllerInterface{
           $params = [];
           $reflection = new \ReflectionMethod($this, $action->name);
           foreach($reflection->getParameters() as $arg){
+
             if(isset($action->params[$arg->name])){
               $params[] = $action->params[$arg->name];
+            } else if($arg->isOptional()){
+              $params[] = null;
+            } else {
+              
             }
           }
           if(count($params) == count($reflection->getParameters())){

@@ -1,0 +1,44 @@
+.flash-wrapper{
+  position: absolute;
+  top: 1rem;
+  right: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.flash-wrapper .flash{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: .5rem 1rem;
+  animation: flashAnim 6s forwards;
+  font-size: 16px;
+}
+.flash-wrapper .flash i{
+  font-size: inherit;
+  margin-right: .5rem;
+}
+.flash-wrapper .flash.flash-success{
+  background-color: var(--success);
+  color: #fff;
+}
+.flash-wrapper .flash.flash-error{
+  background-color: var(--error);
+  color: #fff;
+}
+
+@keyframes flashAnim {
+  0%{
+    /* transform: translateX(-100%); */
+    left: 100%;
+  } 20% {
+    /* transform: translateX(0%); */
+    left: 0%;
+  } 80% {
+    /* transform: translateX(0%); */
+    left: 0%;
+  } 100% {
+    /* transform: translateX(-100%); */
+    left: 100%;
+  }
+}

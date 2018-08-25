@@ -1,11 +1,13 @@
 /**VARIABLES**/
 :root{
-  --desktop-titlebar-bg: #111;
-  --desktop-titlebar-fg: #f2f2f2;
-  --desktop-taskbar-bg: #111;
+  --desktop-titlebar-bg: #e2e2e2;
+  --desktop-titlebar-fg: #333;
+  --desktop-taskbar-bg: rgba(0,0,0,.95);
   --desktop-taskbar-fg: #f2f2f2;
   --desktop-shortcut-bg: #111;
   --desktop-shortcut-fg: #f2f2f2;
+  --desktop-contextmenu-bg: #e2e2e2;
+  --desktop-contextmenu-fg: #333;
 
   --desktop-border-bottom: 1px solid #ddd;
 
@@ -31,7 +33,7 @@
 /**TRANSITIONS AND ANIMATIONS**/
 .desktop.desktop-default .desktop-window,
 .desktop.desktop-default .desktop-taskbar li{
-  transition: transform 200ms ease-in-out, opacity 100ms ease-in-out;
+  transition: transform 200ms ease-in-out, opacity 200ms ease-in-out;
 }
 
 .desktop.desktop-default{
@@ -100,7 +102,7 @@
   background-color: rgba(255,255,255,.2);
 }
 .desktop.desktop-default .desktop-taskbar li.focus{
-  background-color: #4f9da6;
+  background-color: rgba(0,0,0,.5);
 }
 .desktop.desktop-default .desktop-taskbar ul li{
   display: inline-flex;
@@ -129,25 +131,34 @@
   flex-direction: row;
   align-items: center;
 }
-
-.desktop.desktop-default .desktop-taskbar > ul li li{
-  min-width: 150px;
+.desktop.desktop-default .desktop-taskbar .nav-item{
+  display: flex;
+  flex-direction: column;
 }
-.desktop.desktop-default .desktop-taskbar li ul{
+.desktop.desktop-default .desktop-taskbar .nav-item ul{
   display: flex;
   flex-direction: column;
   position: absolute;
-  bottom: 100%;
-  left: 0;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  z-index: 1000;
 }
-.desktop.desktop-default .desktop-taskbar li ul ul{
+.desktop.desktop-default .desktop-taskbar > .nav-item{
+
+}
+.desktop.desktop-default .desktop-taskbar > .nav-item ul{
+  bottom: 100%;
+  left: 0;
+
+}
+.desktop.desktop-default .desktop-taskbar > .nav-item .nav-item {
+  min-width: 150px;
+}
+.desktop.desktop-default .desktop-taskbar > .nav-item .nav-item ul{
   bottom: 0;
   left: 100%;
 }
-
 .desktop.desktop-default .desktop-taskbar li.open > ul{
   opacity: 1;
   visibility: visible;
@@ -173,7 +184,6 @@
 
   max-width: 100%;
   max-height: 100%;
-  resize: both;
 }
 
 .desktop.desktop-default .desktop-window.minimized{
@@ -249,28 +259,27 @@
 .desktop.desktop-default .desktop-window .content{
   flex: 1;
   overflow-y: auto;
-  padding: 1rem;
+  padding: 0 1rem;
+  position: relative;
+  resize: both;
 }
-
-.desktop.desktop-default .desktop-taskbar .taskbar-task .task-contextmenu{
+.desktop.desktop-default ul.contextmenu{
   position: fixed;
   opacity: 1;
   bottom: auto;
   right: auto;
   visibility: visible;
   pointer-events: all;
-  background-color: #fff;
-  color: #111;
+  background: var(--desktop-contextmenu-bg);
+  color: var(--desktop-contextmenu-fg);
   box-shadow: var(--bs-4dp);
   z-index: 1000;
 }
-.desktop.desktop-default .desktop-taskbar .taskbar-task .task-contextmenu li{
-  position: static;
+.desktop.desktop-default ul.contextmenu li{
+  display: list-item;
   cursor: pointer;
 }
-.desktop.desktop-default .desktop-taskbar .taskbar-task .task-contextmenu li{
-}
-.desktop.desktop-default .desktop-taskbar .taskbar-task .task-contextmenu span{
+.desktop.desktop-default ul.contextmenu span{
   padding: .5rem 0;
   margin: 0 .5rem;
 }

@@ -43,14 +43,26 @@ class Record extends \aug\base\Model{
       ])
       ->columns();
   }
+  public function beforeSave(){return true;}
+  public function afterSave(){}
   public function save($validate = true){
     if($validate && !$this->validate()){
       return;
     }
-    if($this->isNewRecord){
-      return $this->insertRecord();
-    } else {
-      return $this->updateRecord();
+    if($this->beforeSave()){
+      if($this->isNewRecord){
+        if($this->insertRecord()){
+          $this->afterSave();
+          return true;
+        }
+        return false;
+      } else {
+        if($this->updateRecord()){
+          $this->afterSave();
+          return true;
+        }
+        return false;
+      }
     }
   }
   public function insertRecord(){

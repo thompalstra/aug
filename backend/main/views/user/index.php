@@ -2,48 +2,59 @@
 use aug\helpers\Html;
 use aug\widgets\Pager;
 use aug\widgets\Table;
+use aug\models\Role;
 ?>
-<!-- <div class="window-bar">
-  <span>Manage users</span>
-  <div class="window-actions">
-    <i class="window-action material-icons minimize">minimize</i>
-    <i class="window-action material-icons maximize">fullscreen</i>
-    <i class="window-action material-icons close">close</i>
-  </div>
-</div> -->
-<!-- <div class="window-content"> -->
-  <?=Pager::widget([
-    "dataProvider" => $dataProvider
-  ])?>
-  <?=Table::widget([
-    "dataProvider" => $dataProvider,
-    "columns" => [
-      "id",
-      "username",
-      "account.first_name",
-      "account.last_name",
-      "account.nationality",
-      [
-        "attribute" => "is_enabled",
-        "value" => function($model){
-          return ($model->is_enabled) ? "Y" : "N";
-        }
-      ],
-      [
-        "label" => "das",
-        "value" => function($model){
-          return Html::a("<i class='material-icons'>search</i>", [""],
-            [
-              "class"=>["open-win"],
-              "data-href" => "/user/{$model->id}",
-              "data-title" => "User {$model->username}"
-            ]
-          );
-        }
+<?=Html::tag("span", "New user",
+  [
+    "class"=>[
+      "btn", "btn-default", "success"
+    ],
+    "data-on" => "click",
+    "data-do" => [
+      "action" => "open-window",
+      "params" => [
+        "href" => "/user/create",
+        "title" => "<i class='material-icons'>account_circle</i>&nbsp;Create user"
       ]
+    ],
+  ]
+);?>
+<?=Table::widget([
+  "dataProvider" => $dataProvider,
+  "columns" => [
+    "id",
+    "username",
+    "account.first_name",
+    "account.last_name",
+    "account.nationality",
+    [
+      "attribute" => "is_enabled",
+      "value" => function($model){
+        return ($model->is_enabled) ? "Y" : "N";
+      }
+    ],
+    [
+      "label" => "das",
+      "value" => function($model){
+        return Html::a("<i class='material-icons'>search</i>", [""],
+          [
+            "class"=>[
+              "btn", "btn-default", "success"
+            ],
+            "data-on" => "click",
+            "data-do" => [
+              "action" => "open-window",
+              "params" => [
+                "href" => "/user/{$model->id}",
+                "title" => "<i class='material-icons'>account_circle</i>&nbsp;User {$model->username}"
+              ]
+            ],
+          ]
+        );
+      }
     ]
-  ])?>
-  <?=Pager::widget([
-    "dataProvider" => $dataProvider
-  ])?>
-<!-- </div> -->
+  ]
+])?>
+<?=Pager::widget([
+  "dataProvider" => $dataProvider
+])?>

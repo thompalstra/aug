@@ -1,8 +1,9 @@
 <?php
 namespace backend\main\controllers;
 use aug\data\DataProvider;
-use common\models\Page;
-class PageController extends \aug\web\Controller{
+use aug\models\Role;
+use aug\models\UserRole;
+class RoleController extends \aug\web\Controller{
   public function actionIndex(){
     return $this->renderPartial("index", [
       "dataProvider" => new DataProvider([
@@ -12,22 +13,28 @@ class PageController extends \aug\web\Controller{
     ]);
   }
   public function actionView($id = null){
-    $page = $this->getModel($id);
+    $model = $this->getModel($id);
+    if($_POST){
+      if($model->load($_POST) && $model->save()){
+        \Aug::$app->setFlash("saved", "saved");
+      } else {
+        \Aug::$app->setFlash("saved", "error");
+      }
+    }
     return $this->renderPartial("view", [
-      "page" => $page,
-      "content" => $page->content
+      "model" => $model
     ]);
   }
   protected function getModel($id = null){
     if(!empty($id)){
-      return Page::find()->where([
+      return Role::find()->where([
         ["id"=>$id]
         ])->one();
     }
-    return new Page();
+    return new Role();
   }
   protected function getModels(){
-    return Page::find()->where([
+    return Role::find()->where([
       ["is_deleted"=>0]
     ]);
   }

@@ -72,6 +72,22 @@ Task.prototype.getIdentifier = function(){
 }
 Task.prototype.setNode = function(node){
   this.data.nodes.node = node;
+  this.getNode().dataset.on = "contextmenu";
+  this.getNode().dataset.do = JSON.stringify({
+    action: "open-context",
+    params: {
+      items: [
+        {
+          label: "Close",
+          action: "close-window"
+        },
+        {
+          label: "Show",
+          action: "ensure-visible"
+        }
+      ]
+    }
+  });
   this.getNode().Task = this;
   this.getNode().className = "taskbar-task";
   this.setTitleNode(document.createElement("span"));
@@ -79,8 +95,8 @@ Task.prototype.setNode = function(node){
 Task.prototype.getNode = function(){
   return this.data.nodes.node;
 }
-Task.prototype.removeTaskContextMenu = function(){
-  this.getTaskContextMenu().getNode().remove();
+Task.prototype.removeContextMenu = function(){
+  this.getContextMenu().getNode().remove();
 }
 Task.prototype.setTitleNode = function(node){
   this.data.nodes.title = node;
@@ -108,25 +124,6 @@ Task.prototype.focusIn = function(){
 Task.prototype.focusOut = function(){
   this.getNode().classList.remove("focus");
 }
-Task.prototype.setTaskContextMenu = function(TaskContextMenu){
-  this.data.TaskContextMenu = TaskContextMenu;
-}
-Task.prototype.getTaskContextMenu = function(){
-  return this.data.TaskContextMenu;
-}
-Task.prototype.addContextMenu = function(event){
-  this.setTaskContextMenu(new TaskContextMenu(this, event));
-  this.getNode().appendChild(this.getTaskContextMenu().getNode());
-  let taskContextMenu = this.getTaskContextMenu();
-  taskContextMenu.getNode().style.left = (taskContextMenu.getEvent().pageX - 5) + "px";
-  taskContextMenu.getNode().style.top = (taskContextMenu.getEvent().pageY - taskContextMenu.getNode().getBoundingClientRect().height + 5) + "px";
-}
-Task.prototype.setTaskContextMenu = function(TaskContextMenu){
-  this.data.TaskContextMenu = TaskContextMenu;
-}
-Task.prototype.getTaskContextMenu = function(){
-  return this.data.TaskContextMenu;
-}
 Task.prototype.addEventListeners = function(){
   this.getNode().addEventListener("click", function(event){
     let win = this.getWindow();
@@ -136,74 +133,10 @@ Task.prototype.addEventListeners = function(){
       win.minimize();
     }
   }.bind(this));
-  this.getNode().addEventListener("contextmenu", function(event){
-    event.preventDefault();
-    this.addContextMenu(event);
+  this.getNode().addEventListener("close-window", function(event){
+    this.getWindow().close();
   }.bind(this));
-}
-var TaskContextMenu = function(Task, event){
-  this.data = { nodes: { node: null }, Task: null, event: null };
-  this.setTask(Task);
-  this.setEvent(event);
-  this.setNode(document.createElement("ul"));
-  this.setMenuItems([
-    {
-      action: "ensureVisible",
-      label: "Bring into view"
-    },
-    {
-      action: "close",
-      label: "Close"
-    }
-  ]);
-  this.addEventListeners();
-}
-TaskContextMenu.prototype.setNode = function(node){
-  this.data.nodes.node = node;
-  this.getNode().className = "task-contextmenu";
-}
-TaskContextMenu.prototype.getNode = function(){
-  return this.data.nodes.node;
-}
-TaskContextMenu.prototype.setTask = function(Task){
-  this.data.Task = Task;
-}
-TaskContextMenu.prototype.getTask = function(){
-  return this.data.Task;
-}
-TaskContextMenu.prototype.setMenuItems = function(menuItems){
-  this.data.menuItems = menuItems;
-  menuItems.forEach(function(menuItem){
-    let node = document.createElement("li");
-    node.dataset.action = menuItem.action;
-    let title = node.appendChild(document.createElement("span"));
-    title.innerHTML = menuItem.label;
-    node.addEventListener("click", function(event){
-      event.preventDefault();
-      event.stopPropagation();
-      let win = this.getTask().getWindow();
-      let workspace = win.getWorkspace();
-      if(typeof win[node.dataset.action] === "function"){
-        win[node.dataset.action].apply(win, []);
-      } else if(typeof workspace[node.dataset.action] === "function"){
-        workspace[node.dataset.action].apply(workspace, [win]);
-      }
-      this.getTask().removeTaskContextMenu();
-    }.bind(this))
-    this.getNode().appendChild(node);
-  }.bind(this));
-}
-TaskContextMenu.prototype.getMenuItems = function(){
-  return this.data.menuItems;
-}
-TaskContextMenu.prototype.setEvent = function(event){
-  this.data.event = event;
-}
-TaskContextMenu.prototype.getEvent = function(event){
-  return this.data.event;
-}
-TaskContextMenu.prototype.addEventListeners = function(){
-  this.getNode().addEventListener("mouseleave", function(event){
-    this.getTask().removeTaskContextMenu();
-  }.bind(this));
+  this.getNode().addEventListener("ensure-visible", function(event){
+    this.getWindow().getWorkspace().ensureVisible(this.getWindow());
+  }.bind(this))
 }

@@ -42,8 +42,13 @@ HTMLFormElement.prototype.serialize = function(){
   for(let i = 0; i < this.elements.length; i++){
     let element = this.elements[i];
     if(["button"].indexOf(element.tagName.toLowerCase()) == -1){
-      console.log(encodeURI(element.name) + "=" + encodeURI(element.value));
-      output.push(encodeURI(element.name) + "=" + encodeURI(element.value));
+      if(element.tagName.toLowerCase() == "select" && element.hasAttribute("multiple")){
+        for(let x = 0; x < element.selectedOptions.length; x++){
+          output.push(encodeURI(element.name) + "=" + encodeURI(element.selectedOptions[x].value));
+        }
+      } else {
+        output.push(encodeURI(element.name) + "=" + encodeURI(element.value));
+      }
     }
   }
   return output.join("&");

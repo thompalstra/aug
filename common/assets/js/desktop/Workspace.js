@@ -127,13 +127,14 @@ Workspace.prototype.ensureVisible = function(win){
   }
   if(nodeBoundingClientRect.left < 0){
     node.style.left = 0 + "px";
+  } else if(nodeBoundingClientRect.left + nodeBoundingClientRect.width > workspaceNodeBoundingClientRect.width){
+    node.style.left = workspaceNodeBoundingClientRect.width - nodeBoundingClientRect.width;
   } else if(nodeBoundingClientRect.left > workspaceNodeBoundingClientRect.width){
     node.style.left = workspaceNodeBoundingClientRect.width - nodeBoundingClientRect.width;
   }
   if(nodeBoundingClientRect.width > workspaceNodeBoundingClientRect.width){
     node.style.width = workspaceNodeBoundingClientRect.width + "px";
-  }
-  if(nodeBoundingClientRect.height > workspaceNodeBoundingClientRect.height){
+  } else if(nodeBoundingClientRect.height > workspaceNodeBoundingClientRect.height){
     node.style.height = workspaceNodeBoundingClientRect.height + "px";
   }
 }
@@ -273,6 +274,12 @@ Win.prototype.setTitle = function(title){
 Win.prototype.getTitle = function(){
   return this.data.title;
 }
+Win.prototype.setUrl = function(url){
+  this.data.url = url;
+}
+Win.prototype.getUrl = function(){
+  return this.data.url;
+}
 Win.prototype.close = function(e){
   this.getWorkspace().closeWindow(this);
 }
@@ -292,8 +299,10 @@ Win.prototype.maximize = function(e){
     if(this.data.isMinimized){
       this.minimize();
     }
+    if(!this.hasFocus()){
+      this.getWorkspace().focusWindow(this);
+    }
     let computed = getComputedStyle(this.getNode());
-    // let workspaceNode = getComputedStyle(this.getWorkspace().getNode());
     let workspaceNode = this.getWorkspace().getNode();
     let workspaceNodeBoundingClientRect = workspaceNode.getBoundingClientRect();
     this.data.previousSize = {
@@ -327,6 +336,7 @@ Win.prototype.focusOut = function(){
   this.getNode().classList.remove("focus");
 }
 Win.prototype.loadFromURL = function(url){
+  this.setUrl(url);
   return fetch(url)
     .then(function(res){
       return res.text();
@@ -375,22 +385,21 @@ Win.prototype.addEventListeners = function(){
         'Content-Type': 'application/x-www-form-urlencoded'
       });
     }
-
-    console.log("click",url, params);
     fetch(url, params)
       .then(function(res){
-        return res.text();
-      }.bind(this))
+        return res.text()
+      })
       .then(function(text){
-        this.closest('.desktop-window').win.getContentNode().innerHTML = text;
+        let win = this.closest('.desktop-window').win;
+        win.getContentNode().innerHTML = text;
       }.bind(this));
   });
   this.getNode().on("submit", "form", function(e){
     e.preventDefault(); e.stopPropagation();
-    let data = this.form.serialize();
-    let params = { method: this.form.method };
-    let url = this.form.action;
-    if(this.form.method.toLowerCase() == "get"){
+    let data = this.serialize();
+    let params = { method: this.method };
+    let url = this.action;
+    if(this.method.toLowerCase() == "get"){
       if(url.indexOf("?") !== -1){
         url = url.substring(0, url.indexOf("?"))
       }
@@ -401,13 +410,13 @@ Win.prototype.addEventListeners = function(){
         'Content-Type': 'application/x-www-form-urlencoded'
       });
     }
-    console.log("submit", url, params);
     fetch(url, params)
       .then(function(res){
-        return res.text();
-      }.bind(this))
+        return res.text()
+      })
       .then(function(text){
-        this.closest('.desktop-window').win.getContentNode().innerHTML = text;
+        let win = this.closest('.desktop-window').win;
+        win.getContentNode().innerHTML = text;
       }.bind(this));
   });
 }

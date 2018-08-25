@@ -3,9 +3,6 @@ use aug\helpers\Html;
 use aug\widgets\Pager;
 use aug\widgets\Table;
 ?>
-<?=Pager::widget([
-  "dataProvider" => $dataProvider
-])?>
 <?=Table::widget([
   "dataProvider" => $dataProvider,
   "columns" => [

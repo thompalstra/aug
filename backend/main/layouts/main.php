@@ -19,12 +19,45 @@ BackendAsset::register();
       <?=Workspace::widget([
         "items" => [
           [
-            // "url" => "/user",
             "icon" => "<i class='material-icons'>account_circle</i>",
             "label" => "Users",
             "attributes" => [
-              "data-href" => "/user",
-              "data-title" => "&lt;i class=&quot;material-icons&quot;&gt;account_circle&lt;/i&gt;&nbsp;Users"
+              "data-on" => "click",
+              "data-do" => [
+                "action" => "open-window",
+                "params" => [
+                  "href" => "/user",
+                  "title" => "<i class='material-icons'>account_circle</i>&nbsp;Users"
+                ]
+              ],
+            ]
+          ],
+          [
+            "icon" => "<i class='material-icons'>pageview</i>",
+            "label" => "Sites",
+            "attributes" => [
+              "data-on" => "click",
+              "data-do" => [
+                "action" => "open-window",
+                "params" => [
+                  "href" => "/site",
+                  "title" => "<i class='material-icons'>pageview</i>&nbsp;Sites"
+                ]
+              ],
+            ]
+          ],
+          [
+            "icon" => "<i class='material-icons'>security</i>",
+            "label" => "Roles",
+            "attributes" => [
+              "data-on" => "click",
+              "data-do" => [
+                "action" => "open-window",
+                "params" => [
+                  "href" => "/role",
+                  "title" => "<i class='material-icons'>security</i>&nbsp;Roles"
+                ]
+              ],
             ]
           ]
         ]
@@ -37,40 +70,61 @@ BackendAsset::register();
           [
             "label" => "<i class='material-icons'>home</i>",
             "attributes" => [
-              "class" => ["home"]
+              "class" => ["nav-item home"]
             ],
             "items" => [
               [
                 "label" => "CMS",
+                "attributes" => [
+                  "class" => ["nav-item"]
+                ],
                 "items" => [
                   [
                     "label" => "<i class='material-icons'>pageview</i>&nbsp;Pages",
                     "attributes" => [
-                      "class" => ["open-win"],
-                      "data-href" => "/page",
-                      "data-title" => "&lt;i class=&quot;material-icons&quot;&gt;pageview&lt;/i&gt;&nbsp;Pages"
+                      "class" => ["nav-item"],
+                      "data-on" => "click",
+                      "data-do" => [
+                        "action" => "open-window",
+                        "params" => [
+                          "href" => "/page",
+                          "title" => "<i class='material-icons'>pageview</i>&nbsp;Pages"
+                        ]
+                      ]
                     ]
                   ],
                   [
                     "label" => "<i class='material-icons'>account_circle</i>&nbsp;Users",
                     "attributes" => [
-                      "class" => ["open-win"],
-                      "data-href" => "/user",
-                      "data-title" => "&lt;i class=&quot;material-icons&quot;&gt;account_circle&lt;/i&gt;&nbsp;Users"
+                      "class" => ["nav-item"],
+                      "data-on" => "click",
+                      "data-do" => [
+                        "action" => "open-window",
+                        "params" => [
+                          "href" => "/user",
+                          "title" => "<i class='material-icons'>account_circle</i>&nbsp;Users"
+                        ]
+                      ]
                     ]
                   ],
                   [
                     "label" => "<i class='material-icons'>security</i>&nbsp;Roles",
                     "attributes" => [
-                      "class" => ["open-win"],
-                      "data-href" => "/role",
-                      "data-title" => "&lt;i class=&quot;material-icons&quot;&gt;security&lt;/i&gt;&nbsp;Roles"
+                      "class" => ["nav-item"],
+                      "data-on" => "click",
+                      "data-do" => [
+                        "action" => "open-window",
+                        "params" => [
+                          "href" => "/role",
+                          "title" => "<i class='material-icons'>security</i>&nbsp;Roles"
+                        ]
+                      ]
                     ]
                   ]
                 ]
               ]
             ]
-          ]
+          ],
         ]
       ])?>
     </main>

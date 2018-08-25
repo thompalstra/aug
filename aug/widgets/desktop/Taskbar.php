@@ -22,30 +22,23 @@ class Taskbar extends \aug\base\Widget{
   }
   public function createItems($items = []){
     $out = [];
-
     foreach($items as $item){
       if(empty($item)){
         continue;
       }
-
       $attributes = $this->itemAttributes;
 
       if(isset($item["items"])){
         $attributes["class"][] = "has-children";
       }
-
-      $itemAttributes = [];
       if(isset($item["attributes"])){
-        $itemAttributes = $item["attributes"];
+        $attributes = Html::mergeAttributes($item["attributes"], $attributes);
       }
-
-
       $out[] = Html::openTag("li",$attributes);
       if(isset($item["url"])){
-        $itemAttributes["href"] = $item["url"];
-        $out[] = Html::tag("a", $itemAttributes, $item["label"]);
+        $out[] = Html::tag("a", $item["label"], ["href" => $item["url"]]);
       } else {
-        $out[] = Html::tag("span", $itemAttributes, $item["label"]);
+        $out[] = Html::tag("span", $item["label"]);
       }
       if(isset($item["items"])){
         $out[] = Html::openTag("ul", []);
@@ -54,7 +47,6 @@ class Taskbar extends \aug\base\Widget{
       }
       $out[] = Html::closeTag("li");
     }
-    //
     return implode("", $out);
   }
   public function closeTaskbar(){

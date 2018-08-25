@@ -61,7 +61,7 @@ class Table extends \aug\base\Widget{
         $attributes = $column["attributes"];
       }
 
-      $head .= Html::tag("td", $attributes, $label);
+      $head .= Html::tag("td", $label, $attributes);
     }
     $head .= Html::closeTag("tr");
     $head .= Html::closeTag("thead");
@@ -90,7 +90,7 @@ class Table extends \aug\base\Widget{
 
         $attributes = Html::mergeAttributes($this->cellAttributes, $attributes);
 
-        $head .= Html::tag("td", $attributes, $value);
+        $head .= Html::tag("td", $value, $attributes);
       }
       $head .= Html::closeTag("tr");
     }

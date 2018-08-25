@@ -27,9 +27,9 @@ class Workspace extends \aug\base\Widget{
 
       if(isset($item["url"])){
         $attributes["href"] = $item["url"];
-        $out[] = Html::tag("a", $attributes, $item["icon"] . Html::tag("label", [], $item["label"]));
+        $out[] = Html::tag("a", $item["icon"] . Html::tag("label", $item["label"]), $attributes);
       } else {
-        $out[] = Html::tag("span", $attributes, $item["icon"] . Html::tag("label", [], $item["label"]));
+        $out[] = Html::tag("span", $item["icon"] . Html::tag("label", $item["label"]), $attributes);
       }
     }
     return implode($out);

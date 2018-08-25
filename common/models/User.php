@@ -2,14 +2,17 @@
 namespace common\models;
 use common\models\UserAccount;
 use aug\security\Security;
+use aug\models\Role;
+use aug\models\UserRole;
 class User extends \aug\security\Identity{
   protected $password;
   public static function rules(){
     return [
       [["username"], "required"],
+      [["roles_list"], "required"],
       [["username"], "string", "min"=>2, "max"=>255, "skipOnEmpty"=>true],
       [["is_enabled", "is_deleted"], "boolean"],
-      [["password"], "passwordValidator", "min"=>4,"max"=>32]
+      [["password"], "passwordValidator", "min"=>4,"max"=>32],
     ];
   }
   public static function tableName(){
@@ -23,6 +26,35 @@ class User extends \aug\security\Identity{
       "account.nationality" => "Nationality",
       "is_enabled" => "Enabled"
     ];
+  }
+  public function beforeSave(){
+    if(empty($this->created_at)){
+      $this->created_at = time();
+    }
+    $this->updated_at = time();
+    return true;
+  }
+  public function afterSave(){
+    $userRoles = UserRole::find()->where([
+      ["user_id"=>$this->id]
+      ])->all();
+    foreach($userRoles as $userRole){
+      $userRole->is_enabled = 0;
+      $userRole->save();
+    }
+    foreach($this->roles_list as $roleId){
+      $userRole = UserRole::find()->where([
+        ["user_id"=>$this->id],
+        ["role_id"=>$roleId]
+      ])->one();
+      if(empty($userRole)){
+        $userRole = new UserRole();
+      }
+      $userRole->user_id = $this->id;
+      $userRole->role_id = $roleId;
+      $userRole->is_enabled = 1;
+      $r = $userRole->save();
+    }
   }
   public function getAccount(){
     $account = UserAccount::find()
@@ -39,6 +71,14 @@ class User extends \aug\security\Identity{
       ["id"=>$id],
       ["is_deleted"=>0]
     ]);
+  }
+  public function getRolesList(){
+    $roles = $this->getRoles();
+    $out = [];
+    foreach($roles as $role){
+      $out[$role->role_id] = $role->name;
+    }
+    return $out;
   }
   public function asPasswordValidator($model, $attribute, $rule){
     $password = $model->$attribute;

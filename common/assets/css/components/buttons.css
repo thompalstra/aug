@@ -1,22 +1,12 @@
-.action{
-  background: #3498db;
-  color: white;
-}
-.action:hover{
-  background: #3e9ddc;
-  color: white;
-}
-.action:active{
-  background: #48a2de;
-  color: white;
-}
+
 .btn{
   border: 0;
   cursor: pointer;
 }
 .btn.btn-default{
+  display: inline-flex;
+  flex: 0 auto;
   text-decoration: none;
-  display: flex;
   justify-content: center;
   align-items: center;
   min-width: 32px;
@@ -36,21 +26,29 @@
 .btn.btn-default:active{
   background: #f2f2f2;
 }
-select{
-  text-decoration: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 32px;
-  outline: 0;
-  background: transparent;
-  border: 1px solid #ddd;
-  margin: 0 5px;
-  padding: 0 .5rem;
+
+.btn.btn-default.action{
+  background: #3498db;
+  color: white;
 }
-select:hover{
-  background: #f6f6f6;
+.btn.btn-default.action:hover{
+  background: #3e9ddc;
+  color: white;
 }
-select:active{
-  background: #f2f2f2;
+.btn.btn-default.action:active{
+  background: #48a2de;
+  color: white;
+}
+
+.btn.btn-default.success{
+  background: #27ae60;
+  color: white;
+}
+.btn.btn-default.success:hover{
+  background: #29ba66;
+  color: white;
+}
+.btn.btn-default.success:active{
+  background: #2cc66d;
+  color: white;
 }

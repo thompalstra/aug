@@ -21,7 +21,7 @@ class FormField extends \aug\base\Widget{
   public function getLabel($attributes = []){
     $model = $this->model;
     $attribute = $this->attribute;
-    return Html::tag("label", $attributes, $model::getAttributeLabel($attribute));
+    return Html::tag("label", $model::getAttributeLabel($attribute), $attributes);
   }
   public function getErrors($attributes = []){
     $errors = "";
@@ -109,6 +109,7 @@ class FormField extends \aug\base\Widget{
     if($attributeName[$l-1] == "]" && $attributeName[$l-2] == "["){
       $this->attributeIsArray = true;
       $attributeName = substr($attributeName, 0, $l-2);
+      $this->attribute = $attributeName;
       return "{$shortClassName}[$attributeName][]";
     }
     return "{$shortClassName}[$attributeName]";

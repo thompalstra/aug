@@ -76,7 +76,7 @@ class Pager extends \aug\base\Widget{
       $attributes["class"][] = "first";
       $attributes["name"] = "page";
       $attributes["value"] = 1;
-      $out[] = Html::tag("button", $attributes, $this->firstText);
+      $out[] = Html::tag("button", $this->firstText, $attributes);
     }
     if($this->next && $startPage > $startOffset){
       $params = $_GET;
@@ -87,7 +87,7 @@ class Pager extends \aug\base\Widget{
       $attributes["class"][] = "prev";
       $attributes["name"] = "page";
       $attributes["value"] = $currentPage - 1;
-      $out[] = Html::tag("button", $attributes, $this->previousText);
+      $out[] = Html::tag("button", $this->previousText, $attributes);
     }
     foreach(range($startOffset, $endOffset) as $pageNumber){
       $params = $_GET;
@@ -99,7 +99,7 @@ class Pager extends \aug\base\Widget{
       $attributes["class"][] = "page";
       $attributes["name"] = "page";
       $attributes["value"] = $pageNumber;
-      $out[] = Html::tag("button", $attributes, $pageNumber);
+      $out[] = Html::tag("button", $pageNumber, $attributes);
     }
     if($this->previous && $currentPage < $lastPage){
       $params = $_GET;
@@ -112,7 +112,7 @@ class Pager extends \aug\base\Widget{
       $attributes["class"][] = "next";
       $attributes["name"] = "page";
       $attributes["value"] = $currentPage + 1;
-      $out[] = Html::tag("button", $attributes, $this->nextText);
+      $out[] = Html::tag("button", $this->nextText, $attributes);
     }
     if($this->last){
       $params = $_GET;
@@ -125,13 +125,13 @@ class Pager extends \aug\base\Widget{
       $attributes["class"][] = "last";
       $attributes["name"] = "page";
       $attributes["value"] = $lastPage;
-      $out[] = Html::tag("button", $attributes, $this->lastText);
+      $out[] = Html::tag("button", $this->lastText, $attributes);
     }
     if($this->pageSizes){
       $out[] = Html::select($this->pageSizes, $pageSize, [
         "name" => "page-size",
         "class" => "pagination pagesize",
-        // "onchange" => "this.form.dispatchEvent(new CustomEvent('submit'),{cancelable:true,bubbles: true})"
+        "onchange" => 'this.form.dispatchEvent(new CustomEvent("submit", {bubbles: true, cancelable: true}))'
       ]);
     }
     $out[] = Html::closeTag("div");

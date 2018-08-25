@@ -1,0 +1,44 @@
+.form{
+
+}
+.form.form-default{
+
+}
+.form.form-default .form-row{
+  display: flex;
+  flex-direction: row;
+}
+.form.form-default .form-row .form-label{
+  display: flex;
+  flex: 0 auto;
+  justify-content: center;
+  align-items: center;
+  padding: .5rem .5rem .5rem 0;
+}
+.form.form-default .form-row .form-control{
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  padding: .5rem 0;
+}
+
+.form.form-default .form-row .form-control input,
+.form.form-default .form-row .form-control select{
+  flex: 1;
+}
+
+.form.form-default .form-row .form-label + .form-control{
+
+}
+
+input[type="text"],
+input[type="password"],
+select{
+  min-height: 32px;
+  border: 1px solid #ddd;
+}
+
+.form .form-default select["multiple"]{
+  height: auto;
+}
