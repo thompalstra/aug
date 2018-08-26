@@ -122,9 +122,55 @@ BackendAsset::register();
                     ]
                   ]
                 ]
+              ],
+              [
+                "label" => "<i class='material-icons'>account_circle</i>&nbsp;" . \Aug::$app->user->username,
+                "attributes" => [
+                  "class" => ["nav-item"]
+                ],
+                "items" => [
+                  [
+                    "label" => "<i class='material-icons'>compare_arrows</i>&nbsp;Switch user",
+                    "attributes" => [
+                      "class" => ["nav-item"],
+                      "data-on" => "click",
+                      "data-do" => [
+                        "action" => "open-window",
+                        "params" => [
+                          "href" => "/site/switch-user",
+                          "title" => "<i class='material-icons'>compare_arrows</i>&nbsp;Switch user"
+                        ]
+                      ]
+                    ]
+                  ],
+                  [
+                    "label" => "<i class='material-icons'>exit_to_app</i>&nbsp;Log off",
+                    "url" => "/site/logout",
+                    "attributes" => [
+                      "class" => ["nav-item"]
+                    ]
+                  ]
+                ]
               ]
+            ],
+
+          ],
+          [
+            "attributes" => [
+              "class" => ["nav-item", "tasks"]
             ]
           ],
+          [
+            "label" => "<i class='material-icons'>assistant_photo</i>",
+            "attributes" => [
+              "class" => ["nav-item", "tray"],
+            ],
+            "items" => [
+              [
+                "label" => "<i class='material-icons'>message</i>"
+              ]
+            ]
+          ]
         ]
       ])?>
     </main>

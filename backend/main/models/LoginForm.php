@@ -2,7 +2,7 @@
 namespace backend\main\models;
 use common\models\User;
 use aug\security\Security;
-class LoginForm extends \aug\base\Widget{
+class LoginForm extends \aug\base\Model{
 
   public $username;
   public $password;

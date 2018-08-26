@@ -18,8 +18,6 @@ class SiteController extends \aug\web\Controller{
   }
   public function actionLogin(){
     $this->layout = "login";
-    $user = User::find()->one();
-
     $loginForm = new LoginForm();
     if($_POST && $loginForm->load($_POST) && $loginForm->login()){
       return $this->redirect("/");
@@ -35,5 +33,13 @@ class SiteController extends \aug\web\Controller{
     \Aug::$app->user->logout();
     header("Location: /login");
   }
-
+  public function actionSwitchUser(){
+    $loginForm = new LoginForm();
+    if($_POST && $loginForm->load($_POST) && $loginForm->login()){
+      return $this->redirect("/");
+    }
+    return $this->renderPartial("switch-user", [
+      "loginForm" => $loginForm
+    ]);
+  }
 }

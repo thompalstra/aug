@@ -387,7 +387,11 @@ Win.prototype.addEventListeners = function(){
     }
     fetch(url, params)
       .then(function(res){
-        return res.text()
+        if(res.redirected){
+          location.href = res.url;
+          return;
+        }
+        return res.text();
       })
       .then(function(text){
         let win = this.closest('.desktop-window').win;
@@ -412,7 +416,11 @@ Win.prototype.addEventListeners = function(){
     }
     fetch(url, params)
       .then(function(res){
-        return res.text()
+        if(res.redirected){
+          location.href = res.redirected;
+          return;
+        }
+        return res.text();
       })
       .then(function(text){
         let win = this.closest('.desktop-window').win;

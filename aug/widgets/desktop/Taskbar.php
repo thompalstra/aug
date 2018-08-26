@@ -35,9 +35,9 @@ class Taskbar extends \aug\base\Widget{
         $attributes = Html::mergeAttributes($item["attributes"], $attributes);
       }
       $out[] = Html::openTag("li",$attributes);
-      if(isset($item["url"])){
+      if(isset($item["url"]) && isset($item["label"])){
         $out[] = Html::tag("a", $item["label"], ["href" => $item["url"]]);
-      } else {
+      } else if(isset($item["label"])) {
         $out[] = Html::tag("span", $item["label"]);
       }
       if(isset($item["items"])){

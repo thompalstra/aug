@@ -80,4 +80,7 @@ class Html{
     $options["href"] = $url;
     return Html::tag("a",$content, $options);
   }
+  public static function button($content, $options = []){
+    return Html::tag("button", $content, $options);
+  }
 }

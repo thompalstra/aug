@@ -1,8 +1,3 @@
-<?php
-
-
-?>
-
 <form method="post">
   <input type="text" name="LoginForm[username]" value="<?=$loginForm->username?>"/>
   <input type="password" name="LoginForm[password]" value="<?=$loginForm->password?>"/>

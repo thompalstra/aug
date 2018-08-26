@@ -1,16 +1,23 @@
 let Taskbar = function(node, Desktop){
+  this.data = { nodes: { node: null, tasks: null }, Desktop: null, map: null };
   this.setNode(node);
+  this.setTasksNode(this.getNode().querySelector(".tasks"));
   this.setDesktop(Desktop);
   this.setTasksMap(new Map());
   this.addEventListeners();
 }
-Taskbar.prototype.data = {};
 Taskbar.prototype.setNode = function(node){
   node.Taskbar = this;
-  this.data.node = node;
+  this.data.nodes.node = node;
 }
 Taskbar.prototype.getNode = function(){
-  return this.data.node;
+  return this.data.nodes.node;
+}
+Taskbar.prototype.setTasksNode = function(node){
+  this.data.nodes.tasks = node;
+}
+Taskbar.prototype.getTasksNode = function(){
+  return this.data.nodes.tasks;
 }
 Taskbar.prototype.setDesktop = function(Desktop){
   this.data.Desktop = Desktop;
@@ -27,7 +34,7 @@ Taskbar.prototype.getTasksMap = function(){
 Taskbar.prototype.addTaskByWindow = function(win){
   let task = new Task(win, this);
   this.getTasksMap().set(win.getIdentifier(), task);
-  this.getNode().appendChild(task.getNode());
+  this.getTasksNode().appendChild(task.getNode());
 }
 Taskbar.prototype.removeTaskByWindow = function(win){
   this.getTasksMap().get(win.getIdentifier()).getNode().remove();
@@ -45,15 +52,28 @@ Taskbar.prototype.focusTask = function(target){
 Taskbar.prototype.unfocusTask = function(target){
   target.focusOut();
 }
-Taskbar.prototype.addEventListeners = function(){
-  this.getNode().on("click", "li.has-children", function(e){
-    this.classList.toggle("open");
-  });
-}
 Taskbar.prototype.closeMenu = function(){
   this.getNode().querySelectorAll("li.open:not(.taskbar-task)").forEach(function(node){
     node.classList.remove("open");
   })
+}
+Taskbar.prototype.addEventListeners = function(){
+  this.getNode().on("click", "li.has-children", function(e){
+    let target = this;
+    let ul = this.closest("ul");
+    ul.querySelectorAll("li.has-children").forEach(function(node){
+      if(node == target){
+        console.log("toggle");
+        node.classList.toggle("open");
+      } else {
+        node.classList.remove("open");
+      }
+    })
+  });
+  console.log(this.getDesktop().getWorkspace().getNode());
+  this.getDesktop().getWorkspace().getNode().addEventListener("click", function(event){
+    this.closeMenu();
+  }.bind(this));
 }
 let Task = function(win, Taskbar){
   this.data = { nodes: { node: null, title: null }, Window: null, Taskbar: null, title: null };
@@ -138,5 +158,5 @@ Task.prototype.addEventListeners = function(){
   }.bind(this));
   this.getNode().addEventListener("ensure-visible", function(event){
     this.getWindow().getWorkspace().ensureVisible(this.getWindow());
-  }.bind(this))
+  }.bind(this));
 }
