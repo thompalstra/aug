@@ -121,23 +121,32 @@ ContextMenu.prototype.getParent = function(){
 }
 ContextMenu.prototype.setMenuItems = function(menuItems){
   this.data.menuItems = menuItems;
-  menuItems.forEach(function(menuItem){
-    let node = document.createElement("li");
-    node.dataset.action = menuItem.action;
-    let title = node.appendChild(document.createElement("span"));
-    title.innerHTML = menuItem.label;
-    node.addEventListener("click", function(event){
-      event.preventDefault();
-      event.stopPropagation();
-      let customEvent = new CustomEvent(node.dataset.action, {
-        bubbles: true,
-        cancelable: true
-      });
-      this.getNode().dispatchEvent(customEvent);
-      this.getNode().remove();
-    }.bind(this))
-    this.getNode().appendChild(node);
-  }.bind(this));
+  this.createMenuItems(this.getNode(), menuItems);
+}
+ContextMenu.prototype.createMenuItems = function(node, items){
+  for(let i = 0; i < items.length; i++){
+    let item = items[i];
+    let menuNode = document.createElement("li");
+    if(typeof item.action !== "undefined"){
+      menuNode.dataset.action;
+      menuNode.addEventListener("click", function(event){
+        event.preventDefault();
+        event.stopPropagation();
+        let customEvent = new CustomEvent(node.dataset.action, {
+          bubbles: true,
+          cancelable: true
+        });
+      }.bind(this));
+    }
+    let title = menuNode.appendChild(document.createElement("span"));
+    title.innerHTML = item.label;
+    if(typeof item.items !== "undefined"){
+      menuNode.classList.add("has-children");
+      let menuNodeList = menuNode.appendChild(document.createElement("ul"));
+      this.createMenuItems(menuNodeList, item.items);
+    }
+    node.appendChild(menuNode);
+  }
 }
 ContextMenu.prototype.getMenuItems = function(){
   return this.data.menuItems;
@@ -150,6 +159,56 @@ ContextMenu.prototype.getEvent = function(event){
 }
 ContextMenu.prototype.addEventListeners = function(){
   this.getNode().addEventListener("mouseleave", function(event){
-    this.getNode().remove();
+    // this.getNode().remove();
   }.bind(this));
+}
+
+var Position = function(x, y){
+  this.data = { x: null, y: null };
+}
+Position.prototype.setX = function(x){
+  this.data.x = x;
+}
+Position.prototype.getX = function(x){
+  return this.data.x;
+}
+Position.prototype.setY = function(x){
+  this.data.y = y;
+}
+Position.prototype.getY = function(x){
+  return this.data.y;
+}
+var Size = function(width, height){
+  this.data = { width: null, height: null };
+  this.setWidth(width);
+  this.setHeight(height);
+}
+Size.prototype.setWidth = function(width){
+  this.data.width = width;
+}
+Size.prototype.getWidth = function(width){
+  return this.data.width;
+}
+Size.prototype.setHeight = function(height){
+  this.data.height = height;
+}
+Size.prototype.getHeight = function(height){
+  return this.data.height;
+}
+var Rectangle = function(x, y, width, height){
+  this.data = { Position: null, Size: null };
+  this.data.Position = new Position(x, y);
+  this.data.Size = new Size(width, height);
+}
+Rectangle.prototype.setPosition = function(x, y){
+  this.data.Position = new Position(x, y);
+}
+Rectangle.prototype.getPosition = function(){
+  return this.data.Position;
+}
+Rectangle.prototype.setSize = function(width, height){
+  this.data.Size = new Size(width, height);
+}
+Rectangle.prototype.getSize = function(){
+  return this.data.Size;
 }

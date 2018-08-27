@@ -8,13 +8,14 @@ use aug\widgets\desktop\Workspace;
 CommonAsset::register();
 BackendAsset::register();
 ?>
+<!DOCTYPE html>
 <html>
-  <header>
+  <head>
     <title><?=\Aug::$app->controller->title?></title>
     <link rel="stylesheet" href=""/>
     <?=$this->head()?>
-  </header>
-  <body  style="overflow: hidden">
+  </head>
+  <body>
     <main id="dt1" class="desktop desktop-default">
       <?=Workspace::widget([
         "items" => [
@@ -175,12 +176,6 @@ BackendAsset::register();
       ])?>
     </main>
     <footer></footer>
-    <script>
-      var dt = null;
-      document.addEventListener("DOMContentLoaded", function(e){
-        dt = new Desktop(document.getElementById("dt1"))
-      })
-    </script>
     <?=$this->footer()?>
   </body>
 </html>

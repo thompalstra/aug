@@ -332,7 +332,7 @@
   position: relative;
   resize: both;
 }
-.desktop.desktop-default ul.contextmenu{
+.desktop.desktop-default .desktop-taskbar ul.contextmenu{
   position: fixed;
   opacity: 1;
   bottom: auto;
@@ -347,6 +347,15 @@
 .desktop.desktop-default ul.contextmenu li{
   display: list-item;
   cursor: pointer;
+}
+.desktop.desktop-default ul.contextmenu li.has-children ul{
+  left: 100%;
+  bottom: 0;
+}
+.desktop.desktop-default ul.contextmenu li.has-children:hover ul{
+  visibility: visible;
+  opacity: 1;
+  pointer-events: all;
 }
 .desktop.desktop-default ul.contextmenu span{
   padding: .5rem 0;

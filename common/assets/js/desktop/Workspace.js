@@ -140,14 +140,9 @@ Workspace.prototype.ensureVisible = function(win){
 }
 let Win = function(Workspace, identifier, title){
   this.data = {
-    isFullScreen: false,
-    isMinimized: false,
-    previousSize: {
-      x: null,
-      y: null,
-      w: null,
-      h: null
-    },
+    maximized: false,
+    minimized: false,
+    previousSize: new Rectangle(null, null, null, null),
     dragOffset: {
       x: null,
       y: null
@@ -243,7 +238,6 @@ Win.prototype.setCloseNode = function(node){
   this.getCloseNode().setAttribute("title", "close");
   this.getCloseNode().win = this;
   this.getCloseNode().className = "window-action close";
-  // this.getCloseNode().innerHTML = "close";
 }
 Win.prototype.getCloseNode = function(node){
   return this.data.nodes.close;
@@ -283,21 +277,33 @@ Win.prototype.getUrl = function(){
 Win.prototype.close = function(e){
   this.getWorkspace().closeWindow(this);
 }
-Win.prototype.minimize = function(e){
-  if(this.data.isMinimized){
+Win.prototype.setMaximized = function(){
+  return this.data.maximized;
+}
+Win.prototype.getMinimized = function(){
+  return this.data.maximized;
+}
+Win.prototype.setMinimized = function(){
+  return this.data.minimized;
+}
+Win.prototype.getMaximized = function(){
+  return this.data.minimized;
+}
+Win.prototype.toggleMinimize = function(e){
+  if(this.data.minimized){
     this.getNode().classList.remove("minimized");
-    this.data.isMinimized = false;
+    this.data.minimized = false;
     this.getWorkspace().getDesktop().focusWindow(this);
   } else {
     this.getNode().classList.add("minimized");
     this.getWorkspace().focusWindow(null);
-    this.data.isMinimized = true;
+    this.data.minimized = true;
   }
 }
-Win.prototype.maximize = function(e){
-  if(!this.data.isFullScreen){
-    if(this.data.isMinimized){
-      this.minimize();
+Win.prototype.toggleMaximize = function(e){
+  if(this.getMaximized() == false){
+    if(this.getMinimized() == true){
+      this.toggleMinimize();
     }
     if(!this.hasFocus()){
       this.getWorkspace().focusWindow(this);
@@ -305,25 +311,26 @@ Win.prototype.maximize = function(e){
     let computed = getComputedStyle(this.getNode());
     let workspaceNode = this.getWorkspace().getNode();
     let workspaceNodeBoundingClientRect = workspaceNode.getBoundingClientRect();
-    this.data.previousSize = {
-      x: computed.getPropertyValue("left"),
-      y: computed.getPropertyValue("top"),
-      w: computed.getPropertyValue("width"),
-      h: computed.getPropertyValue("height")
-    };
+
+    this.data.previousSize = new Rectangle(
+      computed.getPropertyValue("left"),
+      computed.getPropertyValue("top"),
+      computed.getPropertyValue("width"),
+      computed.getPropertyValue("height")
+    );
     let node = this.getNode();
     node.style.left = 0;
     node.style.top = 0;
     node.style.width = workspaceNodeBoundingClientRect.width;
     node.style.height = workspaceNodeBoundingClientRect.height;
-    this.data.isFullScreen = true;
+    this.data.maximized = true;
   } else {
     let node = this.getNode();
-    node.style.left = this.data.previousSize.x;
-    node.style.top = this.data.previousSize.y;
-    node.style.width = this.data.previousSize.w;
-    node.style.height = this.data.previousSize.h;
-    this.data.isFullScreen = false;
+    node.style.left = this.data.previousSize.getPosition().getX();
+    node.style.top = this.data.previousSize.getPosition().getY();
+    node.style.width = this.data.previousSize.getSize().getWidth();
+    node.style.height = this.data.previousSize.getSize().getHeight();
+    this.data.maximized = false;
   }
 }
 Win.prototype.hasFocus = function(){
@@ -357,11 +364,11 @@ Win.prototype.addEventListeners = function(){
   }.bind(this));
   this.getMinimizeNode().addEventListener("click", function(e){
     e.preventDefault(); e.stopPropagation();
-    this.minimize();
+    this.toggleMinimize();
   }.bind(this));
   this.getMaximizeNode().addEventListener("click", function(e){
     e.preventDefault(); e.stopPropagation();
-    this.maximize();
+    this.toggleMaximize();
   }.bind(this));
   this.getNode().on("click", "form button", function(e){
     e.preventDefault(); e.stopPropagation();

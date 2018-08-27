@@ -8,3 +8,4 @@ include(dirname(__FILE__) . DIRECTORY_SEPARATOR . "aug" . DIRECTORY_SEPARATOR . 
 return Application::init()
   ->prepare()
   ->run();
+?>

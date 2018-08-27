@@ -7,11 +7,11 @@ use common\assets\CommonAsset;
 CommonAsset::register();
 ?>
 <html>
-  <header>
+  <head>
     <title><?=\Aug::$app->controller->title?></title>
     <link rel="stylesheet" href=""/>
     <?=$this->head()?>
-  </header>
+  </head>
   <body>
     <main class="columns">
       <section class="column main">

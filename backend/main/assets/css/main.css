@@ -2,8 +2,6 @@
   flex: 1;
   background: #ddd;
 }
-
-
 .block.block-bordered{
   padding: 1rem;
   border: 1px solid #ddd;

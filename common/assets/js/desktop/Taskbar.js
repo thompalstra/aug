@@ -99,11 +99,24 @@ Task.prototype.setNode = function(node){
       items: [
         {
           label: "Close",
-          action: "close-window"
+          action: "close"
         },
         {
-          label: "Show",
-          action: "ensure-visible"
+          label: "View",
+          items: [
+            {
+              label: "Show",
+              action: "ensure-visible"
+            },
+            {
+              label: "Minimize",
+              action: "toggle-minimize"
+            },
+            {
+              label: "Maximize",
+              action: "toggle-maximize"
+            }
+          ]
         }
       ]
     }
@@ -147,14 +160,20 @@ Task.prototype.focusOut = function(){
 Task.prototype.addEventListeners = function(){
   this.getNode().addEventListener("click", function(event){
     let win = this.getWindow();
-    if(!win.hasFocus() && !win.data.isMinimized){
+    if(!win.hasFocus() && !win.getMinimized()){
       win.getWorkspace().focusWindow(win);
     } else {
-      win.minimize();
+      win.toggleMinimize();
     }
   }.bind(this));
-  this.getNode().addEventListener("close-window", function(event){
+  this.getNode().addEventListener("close", function(event){
     this.getWindow().close();
+  }.bind(this));
+  this.getNode().addEventListener("toggle-minimize", function(event){
+    this.getWindow().toggleMinimize();
+  }.bind(this));
+  this.getNode().addEventListener("toggle-maximize", function(event){
+    this.getWindow().toggleMaximize();
   }.bind(this));
   this.getNode().addEventListener("ensure-visible", function(event){
     this.getWindow().getWorkspace().ensureVisible(this.getWindow());
