@@ -277,17 +277,17 @@ Win.prototype.getUrl = function(){
 Win.prototype.close = function(e){
   this.getWorkspace().closeWindow(this);
 }
-Win.prototype.setMaximized = function(){
+Win.prototype.setMaximized = function(maximized){
+  this.data.maximized = maximized;
+}
+Win.prototype.getMaximized = function(){
   return this.data.maximized;
+}
+Win.prototype.setMinimized = function(minimized){
+  this.data.minimized = minimized;
 }
 Win.prototype.getMinimized = function(){
   return this.data.maximized;
-}
-Win.prototype.setMinimized = function(){
-  return this.data.minimized;
-}
-Win.prototype.getMaximized = function(){
-  return this.data.minimized;
 }
 Win.prototype.toggleMinimize = function(e){
   if(this.data.minimized){
@@ -301,6 +301,7 @@ Win.prototype.toggleMinimize = function(e){
   }
 }
 Win.prototype.toggleMaximize = function(e){
+  console.log(this.getMaximized());
   if(this.getMaximized() == false){
     if(this.getMinimized() == true){
       this.toggleMinimize();
@@ -313,24 +314,24 @@ Win.prototype.toggleMaximize = function(e){
     let workspaceNodeBoundingClientRect = workspaceNode.getBoundingClientRect();
 
     this.data.previousSize = new Rectangle(
-      computed.getPropertyValue("left"),
-      computed.getPropertyValue("top"),
-      computed.getPropertyValue("width"),
-      computed.getPropertyValue("height")
+      parseInt(computed.getPropertyValue("left")),
+      parseInt(computed.getPropertyValue("top")),
+      parseInt(computed.getPropertyValue("width")),
+      parseInt(computed.getPropertyValue("height"))
     );
     let node = this.getNode();
     node.style.left = 0;
     node.style.top = 0;
-    node.style.width = workspaceNodeBoundingClientRect.width;
-    node.style.height = workspaceNodeBoundingClientRect.height;
-    this.data.maximized = true;
+    node.style.width = workspaceNodeBoundingClientRect.width + "px";
+    node.style.height = workspaceNodeBoundingClientRect.height + "px";
+    this.setMaximized(true);
   } else {
     let node = this.getNode();
-    node.style.left = this.data.previousSize.getPosition().getX();
-    node.style.top = this.data.previousSize.getPosition().getY();
-    node.style.width = this.data.previousSize.getSize().getWidth();
-    node.style.height = this.data.previousSize.getSize().getHeight();
-    this.data.maximized = false;
+    node.style.left = this.data.previousSize.getPosition().getX() + "px";
+    node.style.top = this.data.previousSize.getPosition().getY() + "px";
+    node.style.width = this.data.previousSize.getSize().getWidth() + "px";
+    node.style.height = this.data.previousSize.getSize().getHeight() + "px";
+    this.setMaximized(false);
   }
 }
 Win.prototype.hasFocus = function(){

@@ -167,6 +167,7 @@ Task.prototype.addEventListeners = function(){
     }
   }.bind(this));
   this.getNode().addEventListener("close", function(event){
+    console.log("close");
     this.getWindow().close();
   }.bind(this));
   this.getNode().addEventListener("toggle-minimize", function(event){

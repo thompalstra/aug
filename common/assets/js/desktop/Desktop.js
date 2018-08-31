@@ -66,11 +66,10 @@ Desktop.prototype.addEventListeners = function(){
 
   })
   this.getNode().on("open-context", function(event){
-    contextMenu = new ContextMenu(this, event);
-    event.target.appendChild(contextMenu.getNode());
-    contextMenu.getNode().style.left = (event.data.originalEvent.pageX - 5) + "px";
-    contextMenu.getNode().style.top = (event.data.originalEvent.pageY - contextMenu.getNode().getBoundingClientRect().height + 5);
-  });
+      contextMenu = new ContextMenu(this, event);
+      contextMenu.getNode().style.left = (event.data.originalEvent.pageX - 5) + "px";
+      contextMenu.getNode().style.top = (event.data.originalEvent.pageY - contextMenu.getNode().getBoundingClientRect().height + 5) + "px";
+  }.bind(this));
 
   let eventList = ["click", "contextmenu"];
   eventList.forEach(function(eventType){
@@ -98,13 +97,21 @@ Desktop.prototype.onHandler = function(event){
   }
 }
 
-let ContextMenu = function(parent, event){
-  this.data = { nodes: { node: null }, Task: null, event: null };
-  this.setParent(parent);
+let ContextMenu = function(Desktop, event){
+  this.data = { nodes: { node: null, parent: null }, event: null };
+  this.setDesktop(Desktop);
   this.setEvent(event);
   this.setNode(document.createElement("ul"));
   this.setMenuItems(event.data.items);
+  this.setParentNode(event.target);
+  this.getDesktop().getNode().appendChild(this.getNode());
   this.addEventListeners();
+}
+ContextMenu.prototype.setParentNode = function(parent){
+  this.data.nodes.parent = parent;
+}
+ContextMenu.prototype.getParentNode = function(){
+  return this.data.nodes.parent;
 }
 ContextMenu.prototype.setNode = function(node){
   this.data.nodes.node = node;
@@ -113,11 +120,11 @@ ContextMenu.prototype.setNode = function(node){
 ContextMenu.prototype.getNode = function(){
   return this.data.nodes.node;
 }
-ContextMenu.prototype.setParent = function(Task){
-  this.data.parent = parent;
+ContextMenu.prototype.setDesktop = function(Desktop){
+  this.data.Desktop = Desktop;
 }
-ContextMenu.prototype.getParent = function(){
-  return this.data.parent;
+ContextMenu.prototype.getDesktop = function(){
+  return this.data.Desktop;
 }
 ContextMenu.prototype.setMenuItems = function(menuItems){
   this.data.menuItems = menuItems;
@@ -128,14 +135,16 @@ ContextMenu.prototype.createMenuItems = function(node, items){
     let item = items[i];
     let menuNode = document.createElement("li");
     if(typeof item.action !== "undefined"){
-      menuNode.dataset.action;
+      menuNode.dataset.action = item.action;
       menuNode.addEventListener("click", function(event){
         event.preventDefault();
         event.stopPropagation();
-        let customEvent = new CustomEvent(node.dataset.action, {
+        let customEvent = new CustomEvent(menuNode.dataset.action, {
           bubbles: true,
           cancelable: true
         });
+        this.getParentNode().dispatchEvent(customEvent);
+        this.getNode().remove();
       }.bind(this));
     }
     let title = menuNode.appendChild(document.createElement("span"));
@@ -161,6 +170,9 @@ ContextMenu.prototype.addEventListeners = function(){
   this.getNode().addEventListener("mouseleave", function(event){
     // this.getNode().remove();
   }.bind(this));
+}
+ContextMenu.prototype.close = function(){
+  this.data.nodes.node.remove();
 }
 
 var Position = function(x, y){
