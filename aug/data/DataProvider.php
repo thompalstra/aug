@@ -12,14 +12,16 @@ class DataProvider{
       $this->$k = $v;
     }
 
-    // $query = clone $this->query;
-
     if($this->pagination["page"] == 1){
       $this->_offset = 0;
     } else {
-      $this->_offset = $this->pagination["page"] * $this->pagination["pageSize"] -1;
+      $this->_offset = $this->pagination["page"] * $this->pagination["pageSize"] - $this->pagination["pageSize"];
     }
+
+
+
     $this->_limit = $this->_offset + $this->pagination["pageSize"];
+
 
     $this->_totalCount = $this->query->count();
 

@@ -36,20 +36,24 @@ Node.prototype.do = function(eventType, options){
   this.dispatchEvent(ce);
   return ce;
 }
+HTMLCollection.prototype.delegate = NodeList.prototype.delegate = function(fn, arg){
+  this.forEach(function(node){
+    if(typeof node[fn] === "function"){
+      node[fn].apply(node, arg);
+    } else {
+      throw Error("Function '" + fn + "' does not exist");
+    }
+  }.bind(this));
+}
+HTMLCollection.prototype.on = NodeList.prototype.on = function(){
+  this.delegate("on", arguments);
+}
 
 HTMLFormElement.prototype.serialize = function(){
-  let output = [];
-  for(let i = 0; i < this.elements.length; i++){
-    let element = this.elements[i];
-    if(["button"].indexOf(element.tagName.toLowerCase()) == -1){
-      if(element.tagName.toLowerCase() == "select" && element.hasAttribute("multiple")){
-        for(let x = 0; x < element.selectedOptions.length; x++){
-          output.push(encodeURI(element.name) + "=" + encodeURI(element.selectedOptions[x].value));
-        }
-      } else {
-        output.push(encodeURI(element.name) + "=" + encodeURI(element.value));
-      }
-    }
+  var fd = new FormData(this);
+  var output = [];
+  for(var entry of fd.entries()){
+  	output.push(encodeURI(entry[0]) + "=" + encodeURI(entry[1]));
   }
   return output.join("&");
 }

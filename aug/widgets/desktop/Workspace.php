@@ -22,10 +22,12 @@ class Workspace extends \aug\base\Widget{
     foreach($items as $item){
       $attributes = $this->itemAttributes;
       if(isset($item["attributes"])){
-        $attributes = Html::mergeAttributes($attributes, $item["attributes"]);
+        $attributes = $item["attributes"];
       }
 
-      if(isset($item["url"])){
+      if(isset($item["content"])){
+        $out[] = Html::tag("span", $item["content"], $attributes);
+      } else if(isset($item["url"])){
         $attributes["href"] = $item["url"];
         $out[] = Html::tag("a", $item["icon"] . Html::tag("label", $item["label"]), $attributes);
       } else {

@@ -38,6 +38,11 @@ Desktop.prototype.focusWindow = function(win){
   }
 }
 Desktop.prototype.addEventListeners = function(){
+  this.getNode().addEventListener("click", function(event){
+    if(!event.target.matches(".desktop-window") && !event.target.closest(".desktop-window")){
+      this.focusWindow(null);
+    }
+  }.bind(this));
   this.getNode().on("mousedown", ".desktop-window .titlebar > span", function(event){
     event.preventDefault(); event.stopPropagation();
     let node = this.closest(".desktop-window");
@@ -59,8 +64,7 @@ Desktop.prototype.addEventListeners = function(){
   this.getNode().on("open-window", function(event){
     if(typeof event.data === "undefined"){ throw Error("Missing 'data' attributes") }
     if(typeof event.data.href === "undefined"){ throw Error("Missing 'href' attribute") }
-    if(typeof event.data.title === "undefined"){ throw Error("Missing 'title' attribute") }
-    this.getWorkspace().openWindow(event.data.href, event.data.title);
+    this.getWorkspace().openWindow(event.data.href);
   }.bind(this));
   this.getNode().on("focus-window", function(event){
 
@@ -70,7 +74,6 @@ Desktop.prototype.addEventListeners = function(){
       contextMenu.getNode().style.left = (event.data.originalEvent.pageX - 5) + "px";
       contextMenu.getNode().style.top = (event.data.originalEvent.pageY - contextMenu.getNode().getBoundingClientRect().height + 5) + "px";
   }.bind(this));
-
   let eventList = ["click", "contextmenu"];
   eventList.forEach(function(eventType){
     this.getNode().on(eventType, '[data-on="'+eventType+'"]', this.onHandler);
@@ -168,13 +171,12 @@ ContextMenu.prototype.getEvent = function(event){
 }
 ContextMenu.prototype.addEventListeners = function(){
   this.getNode().addEventListener("mouseleave", function(event){
-    // this.getNode().remove();
+    this.getNode().remove();
   }.bind(this));
 }
 ContextMenu.prototype.close = function(){
   this.data.nodes.node.remove();
 }
-
 var Position = function(x, y){
   this.data = { x: null, y: null };
 }

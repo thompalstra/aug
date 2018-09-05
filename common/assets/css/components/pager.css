@@ -1,22 +1,55 @@
 .pager{
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: .5rem 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.pager li{
-  flex: 0 auto;
+.pager .page-item{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
-.pager.pager-default{
+.pager .page-item a{
+  border-radius: 100%;
+  color: #000;
 }
-.pager.pager-default button{
-  /* margin: 0 .5rem; */
+.pager .page-item a:hover{
+  background: #f2f2f2;
 }
-.pager.pager-default button.first,
-.pager.pager-default button.previous,
-.pager.pager-default button.next,
-.pager.pager-default button.last{
-  /* padding: .5rem 0; */
+.pager .page-item a.current{
+  color: #16a085;
+}
+
+.pager .page-item a{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  line-height: inherit;
+  color: inherit;
+  width: 24px;
+  height: 24px;
+  padding: .5rem;
+}
+
+.pager .page-item i{
+  line-height: inherit;
+  color: inherit;
+}
+.pager .page-item select{
+  border: 0;
+  padding: .5rem 1rem;
+  box-shadow: none;
+
+  height: 24px;
+  line-height: 24px;
+  padding: 0 1rem;
+}
+.pager .page-item select:focus,
+.pager .page-item select:active,
+.pager .page-item select:hover{
+  box-sizing: none;
 }

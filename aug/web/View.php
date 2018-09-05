@@ -31,8 +31,14 @@ class View implements ViewInterface{
     }
   }
   public function renderPartial($viewName, $data = []){
-    $viewPath = \Aug::$app->controller->viewPath;
-    $viewFile = File::path("{$viewPath}{$viewName}.php");
+    if($viewName[0] == "/"){
+      $viewPath = \Aug::$app->environment->relativePath;
+      $viewName = substr($viewName, 1, strlen($viewName));
+      $viewFile = File::path("{$viewPath}{$viewName}.php");
+    } else {
+      $viewPath = \Aug::$app->controller->viewPath;
+      $viewFile = File::path("{$viewPath}{$viewName}.php");
+    }
     echo $this->renderFile($viewFile, $data);
   }
 

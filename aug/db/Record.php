@@ -32,6 +32,26 @@ class Record extends \aug\base\Model{
       ->where($where)
       ->one();
   }
+  public function delete(){
+    $className = get_called_class();
+    $where = [];
+    foreach($this->_attributes as $k => $v){
+      $where[] = [$k => $v];
+    }
+    return (new Query(get_called_class()))
+      ->delete()
+      ->from($className::tableName())
+      ->where($where)
+      ->execute();
+  }
+  public static function deleteAll($where = []){
+    $className = get_called_class();
+    return (new Query(get_called_class()))
+      ->delete()
+      ->from($className::tableName())
+      ->where($where)
+      ->execute();
+  }
   public static function getColumns(){
     $className =  get_called_class();
     return (new Query(get_called_class()))

@@ -13,6 +13,7 @@ class FormField extends \aug\base\Widget{
     $this->form = $form;
 
     $this->inputName = $this->getInputName();
+    $this->inputId = $this->getInputId();
     $this->attributeValue = $this->getAttributeValue();
   }
   public function getRowStart($attributes = []){
@@ -58,48 +59,42 @@ class FormField extends \aug\base\Widget{
   }
   public function textInput($attributes = []){
     $attributes["type"] = "text";
-    if(!isset($attributes["name"])){
-      $attributes["name"] = $this->inputName;
-    }
-    if(!isset($attributes["value"])){
-      $attributes["value"] = $this->attributeValue;
-    }
+
+    if(!isset($attributes["name"]))         {   $attributes["name"] = $this->inputName;                                         }
+    if(!isset($attributes["value"]))        {   $attributes["value"] = $this->attributeValue;                                   }
+    if(!isset($attributes["placeholder"]))  {   $attributes["placeholder"] = $this->model::getAttributeLabel($this->attribute); }
+    if(!isset($attributes["id"]))           {   $attributes["id"] = $this->inputId;                                             }
     return $this->createLayout(Html::input($attributes));
   }
   public function passwordInput($attributes = []){
     $attributes["type"] = "password";
-    if(!isset($attributes["name"])){
-      $attributes["name"] = $this->inputName;
-    }
-    if(!isset($attributes["value"])){
-      $attributes["value"] = $this->attributeValue;
-    }
+
+    if(!isset($attributes["name"]))         {   $attributes["name"] = $this->inputName;                                         }
+    if(!isset($attributes["value"]))        {   $attributes["value"] = $this->attributeValue;                                   }
+    if(!isset($attributes["placeholder"]))  {   $attributes["placeholder"] = $this->model::getAttributeLabel($this->attribute); }
+    if(!isset($attributes["id"]))           {   $attributes["id"] = $this->inputId;                                             }
+
     return $this->createLayout(Html::input($attributes));
   }
   public function checkboxInput($attributes = []){
     $attributes["type"] = "checkbox";
 
-    if(!isset($attributes["name"]))
-      $attributes["name"] = $this->inputName;
+    if(!isset($attributes["name"]))         {   $attributes["name"] = $this->inputName;   }
+    if($this->attributeValue == true)       {   $attributes["checked"] = "";              }
 
-    if($this->attributeValue == true)
-      $attributes["checked"] = "";
-
-    $hiddenAttributes = [
-      "type" => "hidden",
-      "value" => 0,
-      "name" => $this->inputName
-    ];
-    return $this->createLayout(Html::input($hiddenAttributes).Html::input($attributes));
+    return $this->createLayout(Html::checkboxInput($attributes));
   }
   public function selectInput($options = [], $attributes = []){
-    if(!isset($attributes["name"])){
-      $attributes["name"] = $this->inputName;
-    }
+
+    if(!isset($attributes["name"]))         {   $attributes["name"] = $this->inputName;   }
+
     return $this->createLayout(Html::select($options, $this->attributeValue, $attributes));
   }
   public function getInputId(){
-
+    $inputId = str_replace( ["[", "]"], [" ", " "], $this->inputName );
+    $inputId = trim($inputId, " ");
+    $inputId = str_replace( [" "], ["-"], $inputId);
+    return strtolower($inputId);
   }
   public function getInputName(){
     $model = $this->model;

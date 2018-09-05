@@ -63,14 +63,12 @@ Taskbar.prototype.addEventListeners = function(){
     let ul = this.closest("ul");
     ul.querySelectorAll("li.has-children").forEach(function(node){
       if(node == target){
-        console.log("toggle");
         node.classList.toggle("open");
       } else {
         node.classList.remove("open");
       }
     })
   });
-  console.log(this.getDesktop().getWorkspace().getNode());
   this.getDesktop().getWorkspace().getNode().addEventListener("click", function(event){
     this.closeMenu();
   }.bind(this));
@@ -133,7 +131,6 @@ Task.prototype.removeContextMenu = function(){
 }
 Task.prototype.setTitleNode = function(node){
   this.data.nodes.title = node;
-  this.getTitleNode().innerHTML = this.getWindow().getTitle();
   this.getNode().appendChild(node);
 }
 Task.prototype.getTitleNode = function(){
@@ -159,6 +156,7 @@ Task.prototype.focusOut = function(){
 }
 Task.prototype.addEventListeners = function(){
   this.getNode().addEventListener("click", function(event){
+    event.preventDefault(); event.stopPropagation();
     let win = this.getWindow();
     if(!win.hasFocus() && !win.getMinimized()){
       win.getWorkspace().focusWindow(win);
@@ -167,7 +165,6 @@ Task.prototype.addEventListeners = function(){
     }
   }.bind(this));
   this.getNode().addEventListener("close", function(event){
-    console.log("close");
     this.getWindow().close();
   }.bind(this));
   this.getNode().addEventListener("toggle-minimize", function(event){

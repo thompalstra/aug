@@ -58,6 +58,18 @@ class Html{
   public static function input($attributes){
     return self::tag("input", "", $attributes);
   }
+  public static function checkboxInput($attributes = []){
+    if(!isset($attributes["name"])){
+      return "Missing required attribute 'name'";
+    }
+    $attributes["type"] = "checkbox";
+    $hiddenAttributes = [
+      "type" => "hidden",
+      "value" => 0,
+      "name" => $attributes["name"]
+    ];
+    return self::tag("input", "", $hiddenAttributes) . self::tag("input", "", $attributes);
+  }
   public static function select($options, $value, $attributes){
     $out = [];
     foreach($options as $k => $v){

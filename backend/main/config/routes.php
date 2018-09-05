@@ -1,12 +1,19 @@
 <?php
 return [
-  "/user" => "user/index",
-  "/user/create" => "user/view",
-  "/user/<id:(.*)>" => "user/view",
-  "/page" => "page/index",
-  "/page/create" => "page/view",
-  "/page/<id:([0-9]+)>" => "page/view",
-  "/role" => "role/index",
-  "/role/create" => "role/view",
-  "/role/<id:([0-9]+)>" => "role/view"
+  "/users" => "users/index",
+  "/users/create" => "users/view",
+  "/users/<id:(.*)>" => "users/view",
+  "/users/delete/<id:(.*)>" => "users/delete",
+  "/pages" => "pages/index",
+  "/pages/create" => "pages/view",
+  "/pages/<id:([0-9]+)>" => "pages/view",
+  "/pages/delete/<id:(.*)>" => "pages/delete",
+  "/roles" => "roles/index",
+  "/roles/create" => "roles/view",
+  "/roles/<id:([0-9]+)>" => "roles/view",
+  "/roles/delete/<id:(.*)>" => "roles/delete",
+  "/sites" => "sites/index",
+  "/sites/create" => "sites/view",
+  "/sites/<id:([0-9]+)>" => "sites/view",
+  "/sites/delete/<id:(.*)>" => "sites/delete",
 ];

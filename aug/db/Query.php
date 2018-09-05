@@ -15,6 +15,10 @@ class Query{
     $this->select = $select;
     return $this;
   }
+  public function delete(){
+    $this->delete = "DELETE";
+    return $this;
+  }
   public function from($from){
     $this->from = $from;
     return $this;
@@ -106,6 +110,10 @@ class Query{
     }
     return $sth->fetch();
   }
+  public function execute(){
+    $sth = Connection::$dbh->prepare($this->createCommand());
+    return $sth->execute();
+  }
   public function fetchCount($command){
     $sth = Connection::$dbh->prepare($command);
     $sth->execute();
@@ -139,7 +147,11 @@ class Query{
   }
   public function createCommand(){
     $lines = [];
-    $lines[] = "SELECT {$this->select}";
+    if($this->select){
+      $lines[] = "SELECT {$this->select}";
+    } else if($this->delete){
+      $lines[] = "DELETE";
+    }
     $lines[] = "FROM {$this->from}";
     foreach($this->parts as $part){
       $type = key($part);

@@ -31,6 +31,7 @@ class Connection{
    */
   public static function createDbh(){
     self::$dbh = new \PDO(self::$con, self::$user, self::$pass);
+    self::$dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
   }
   /**
    * [getCon description]

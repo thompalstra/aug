@@ -16,33 +16,49 @@ BackendAsset::register();
     <?=$this->head()?>
   </head>
   <body>
-    <main id="dt1" class="desktop desktop-default">
+    <main id="dt1" class="desktop desktop-default layout-main">
       <?=Workspace::widget([
         "items" => [
           [
             "icon" => "<i class='material-icons'>account_circle</i>",
             "label" => "Users",
             "attributes" => [
+              "class" => ["shortcut"],
               "data-on" => "click",
               "data-do" => [
                 "action" => "open-window",
                 "params" => [
-                  "href" => "/user",
-                  "title" => "<i class='material-icons'>account_circle</i>&nbsp;Users"
+                  "href" => "/users",
+                ]
+              ],
+            ]
+          ],
+          [
+            "icon" => "<i class='material-icons'>list</i>",
+            "label" => "Sites",
+            "attributes" => [
+              "class" => ["shortcut"],
+              "data-on" => "click",
+              "data-do" => [
+                "action" => "open-window",
+                "params" => [
+                  "href" => "/sites",
+                  // "title" => "<i class='material-icons'>list</i>&nbsp;Sites"
                 ]
               ],
             ]
           ],
           [
             "icon" => "<i class='material-icons'>pageview</i>",
-            "label" => "Sites",
+            "label" => "Pages",
             "attributes" => [
+              "class" => ["shortcut"],
               "data-on" => "click",
               "data-do" => [
                 "action" => "open-window",
                 "params" => [
-                  "href" => "/site",
-                  "title" => "<i class='material-icons'>pageview</i>&nbsp;Sites"
+                  "href" => "/pages",
+                  // "title" => "<i class='material-icons'>pageview</i>&nbsp;Pages"
                 ]
               ],
             ]
@@ -51,14 +67,21 @@ BackendAsset::register();
             "icon" => "<i class='material-icons'>security</i>",
             "label" => "Roles",
             "attributes" => [
+              "class" => ["shortcut"],
               "data-on" => "click",
               "data-do" => [
                 "action" => "open-window",
                 "params" => [
-                  "href" => "/role",
-                  "title" => "<i class='material-icons'>security</i>&nbsp;Roles"
+                  "href" => "/roles",
+                  // "title" => "<i class='material-icons'>security</i>&nbsp;Roles"
                 ]
               ],
+            ]
+          ],
+          [
+            "content" => \common\widgets\DesktopCountWidget::widget(),
+            "attributes" => [
+              "class" => ["widget", "widget-3x2"]
             ]
           ]
         ]
@@ -75,56 +98,6 @@ BackendAsset::register();
             ],
             "items" => [
               [
-                "label" => "CMS",
-                "attributes" => [
-                  "class" => ["nav-item"]
-                ],
-                "items" => [
-                  [
-                    "label" => "<i class='material-icons'>pageview</i>&nbsp;Pages",
-                    "attributes" => [
-                      "class" => ["nav-item"],
-                      "data-on" => "click",
-                      "data-do" => [
-                        "action" => "open-window",
-                        "params" => [
-                          "href" => "/page",
-                          "title" => "<i class='material-icons'>pageview</i>&nbsp;Pages"
-                        ]
-                      ]
-                    ]
-                  ],
-                  [
-                    "label" => "<i class='material-icons'>account_circle</i>&nbsp;Users",
-                    "attributes" => [
-                      "class" => ["nav-item"],
-                      "data-on" => "click",
-                      "data-do" => [
-                        "action" => "open-window",
-                        "params" => [
-                          "href" => "/user",
-                          "title" => "<i class='material-icons'>account_circle</i>&nbsp;Users"
-                        ]
-                      ]
-                    ]
-                  ],
-                  [
-                    "label" => "<i class='material-icons'>security</i>&nbsp;Roles",
-                    "attributes" => [
-                      "class" => ["nav-item"],
-                      "data-on" => "click",
-                      "data-do" => [
-                        "action" => "open-window",
-                        "params" => [
-                          "href" => "/role",
-                          "title" => "<i class='material-icons'>security</i>&nbsp;Roles"
-                        ]
-                      ]
-                    ]
-                  ]
-                ]
-              ],
-              [
                 "label" => "<i class='material-icons'>account_circle</i>&nbsp;" . \Aug::$app->user->username,
                 "attributes" => [
                   "class" => ["nav-item"]
@@ -139,7 +112,6 @@ BackendAsset::register();
                         "action" => "open-window",
                         "params" => [
                           "href" => "/site/switch-user",
-                          "title" => "<i class='material-icons'>compare_arrows</i>&nbsp;Switch user"
                         ]
                       ]
                     ]
@@ -151,6 +123,78 @@ BackendAsset::register();
                       "class" => ["nav-item"]
                     ]
                   ]
+                ]
+              ],
+              [
+                "label" => "Users",
+                "attributes" => [
+                  "class" => ["nav-item"]
+                ],
+                "items" => [
+                  [
+                    "label" => "<i class='material-icons'>account_circle</i>&nbsp;Users",
+                    "attributes" => [
+                      "class" => ["nav-item"],
+                      "data-on" => "click",
+                      "data-do" => [
+                        "action" => "open-window",
+                        "params" => [
+                          "href" => "/users",
+                          // "title" => "<i class='material-icons'>account_circle</i>&nbsp;Users"
+                        ]
+                      ]
+                    ]
+                  ],
+                  [
+                    "label" => "<i class='material-icons'>security</i>&nbsp;Roles",
+                    "attributes" => [
+                      "class" => ["nav-item"],
+                      "data-on" => "click",
+                      "data-do" => [
+                        "action" => "open-window",
+                        "params" => [
+                          "href" => "/roles",
+                          // "title" => "<i class='material-icons'>security</i>&nbsp;Roles"
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "label" => "CMS",
+                "attributes" => [
+                  "class" => ["nav-item"]
+                ],
+                "items" => [
+                  [
+                    "label" => "<i class='material-icons'>list</i>&nbsp;Sites",
+                    "attributes" => [
+                      "class" => ["nav-item"],
+                      "data-on" => "click",
+                      "data-do" => [
+                        "action" => "open-window",
+                        "params" => [
+                          "href" => "/sites",
+                          // "title" => "<i class='material-icons'>list</i>&nbsp;Sites"
+                        ]
+                      ]
+                    ]
+                  ],
+                  [
+                    "label" => "<i class='material-icons'>pageview</i>&nbsp;Pages",
+                    "attributes" => [
+                      "class" => ["nav-item"],
+                      "data-on" => "click",
+                      "data-do" => [
+                        "action" => "open-window",
+                        "params" => [
+                          "href" => "/pages",
+                          // "title" => "<i class='material-icons'>pageview</i>&nbsp;Pages"
+                        ]
+                      ]
+                    ]
+                  ],
                 ]
               ]
             ],
@@ -168,7 +212,7 @@ BackendAsset::register();
             ],
             "items" => [
               [
-                "label" => "<i class='material-icons'>message</i>"
+                "label" => "<i class='material-icons'>message</i>&nbsp;Messages"
               ]
             ]
           ]
@@ -177,5 +221,11 @@ BackendAsset::register();
     </main>
     <footer></footer>
     <?=$this->footer()?>
+    <script>
+      var dt = null;
+      document.addEventListener("DOMContentLoaded", function(e){
+        dt = new Desktop(document.getElementById("dt1"))
+      })
+    </script>
   </body>
 </html>

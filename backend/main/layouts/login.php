@@ -3,8 +3,10 @@
 use aug\widgets\Nav;
 
 use common\assets\CommonAsset;
+use backend\main\assets\BackendAsset;
 
 CommonAsset::register();
+BackendAsset::register();
 ?>
 <html>
   <head>
@@ -13,7 +15,7 @@ CommonAsset::register();
     <?=$this->head()?>
   </head>
   <body>
-    <main class="columns">
+    <main class="columns layout-login">
       <section class="column main">
         <?=$content?>
       </section>

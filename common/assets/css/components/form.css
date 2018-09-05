@@ -7,14 +7,15 @@
 .form.form-default .form-row{
   display: flex;
   flex-direction: row;
-  margin: .5rem 0;
+  margin: 1rem 0;
 }
 .form.form-default .form-row .form-label{
   display: flex;
   flex: 1;
-  justify-content: center;
   align-items: center;
-  padding-right: .5rem;
+  padding-right: 1rem;
+  white-space: pre;
+  text-overflow: ellipsis;
 }
 .form.form-default .form-row .form-control{
   display: flex;
@@ -32,11 +33,47 @@
 
 }
 
+.button-row{
+  display: flex;
+  flex-direction: row;
+  margin: .5rem 0;
+}
+.button-row .btn{
+  margin-right: .5rem;
+}
+.row-rtl{
+  direction: rtl;
+}
+.button-row.row-trl .btn{
+  margin-left: .5rem;
+}
+
+
+
 input[type="text"],
 input[type="password"],
 select{
-  min-height: 32px;
-  border: 1px solid #ddd;
+  border: 0;
+  padding: .5rem 1rem;
+  box-shadow: var(--bs-1dp);
+  transition: var(--transition-default);
+}
+select[multiple]{
+  padding: 0;
+}
+input[type="text"]:hover,
+input[type="password"]:hover,
+select:hover{
+  box-shadow: var(--bs-4dp);
+}
+input[type="text"]:focus,
+input[type="text"]:active,
+input[type="password"]:focus,
+input[type="password"]:active,
+select:focus,
+select:active{
+  box-shadow: var(--bs-8dp);
+  outline: 0;
 }
 
 .form .form-default select["multiple"]{

@@ -60,9 +60,9 @@ Workspace.prototype.addWindow = function(win){
   this.getWindowsMap().set(win.getIdentifier(), win);
   return win;
 }
-Workspace.prototype.openWindow = function(url, title){
+Workspace.prototype.openWindow = function(url){
   let identifier = this.createIdentifier(url);
-  let win = this.addWindow(new Win(this, identifier, title));
+  let win = this.addWindow(new Win(this, identifier));
   this.getDesktop().getTaskbar().closeMenu();
   this.getDesktop()
     .getTaskbar()
@@ -71,11 +71,13 @@ Workspace.prototype.openWindow = function(url, title){
     .then(function(){
       this.getNode().appendChild(win.getNode());
       this.getDesktop().focusWindow(win);
+      win.getNode().dispatchEvent(new CustomEvent("window-loaded", {cancelable: false, bubbles: false}));
     }.bind(this));
 }
 Workspace.prototype.removeWindow = function(win){
-  this.getWindowsMap().get(win.getIdentifier()).getNode().remove();
+  win.getNode().remove();
   this.getWindowsMap().delete(win.getIdentifier());
+  win = null;
 }
 Workspace.prototype.closeWindow = function(win){
   this.getDesktop().getTaskbar().removeTaskByWindow(win);
@@ -138,7 +140,7 @@ Workspace.prototype.ensureVisible = function(win){
     node.style.height = workspaceNodeBoundingClientRect.height + "px";
   }
 }
-let Win = function(Workspace, identifier, title){
+let Win = function(Workspace, identifier){
   this.data = {
     maximized: false,
     minimized: false,
@@ -151,7 +153,6 @@ let Win = function(Workspace, identifier, title){
   };
   this.setWorkspace(Workspace);
   this.setIdentifier(identifier);
-  this.setTitle(title);
   this.setNode(document.createElement("div"));
   this.getNode().setAttribute("id", identifier);
   this.addEventListeners();
@@ -264,6 +265,8 @@ Win.prototype.getMaximizeNode = function(node){
 }
 Win.prototype.setTitle = function(title){
   this.data.title = title;
+  this.getTitleNode().innerHTML = title;
+  this.getTask().getTitleNode().innerHTML = title;
 }
 Win.prototype.getTitle = function(){
   return this.data.title;
@@ -277,6 +280,12 @@ Win.prototype.getUrl = function(){
 Win.prototype.close = function(e){
   this.getWorkspace().closeWindow(this);
 }
+Win.prototype.setToolStrip = function(node){
+  this.data.ToolStrip = new ToolStrip(this, node);
+}
+Win.prototype.getToolstrip = function(){
+  return this.data.ToolStrip;
+}
 Win.prototype.setMaximized = function(maximized){
   this.data.maximized = maximized;
 }
@@ -287,21 +296,20 @@ Win.prototype.setMinimized = function(minimized){
   this.data.minimized = minimized;
 }
 Win.prototype.getMinimized = function(){
-  return this.data.maximized;
+  return this.data.minimized;
 }
 Win.prototype.toggleMinimize = function(e){
-  if(this.data.minimized){
+  if(this.getMinimized()){
     this.getNode().classList.remove("minimized");
-    this.data.minimized = false;
+    this.setMinimized(false);
     this.getWorkspace().getDesktop().focusWindow(this);
   } else {
     this.getNode().classList.add("minimized");
     this.getWorkspace().focusWindow(null);
-    this.data.minimized = true;
+    this.setMinimized(true);
   }
 }
 Win.prototype.toggleMaximize = function(e){
-  console.log(this.getMaximized());
   if(this.getMaximized() == false){
     if(this.getMinimized() == true){
       this.toggleMinimize();
@@ -351,28 +359,47 @@ Win.prototype.loadFromURL = function(url){
     }.bind(this))
     .then(function(text){
       this.getContentNode().innerHTML = text;
+      this.getContentNode().querySelectorAll("script").forEach(function(originalScriptNode){
+        eval(originalScriptNode.innerHTML);
+      }.bind(this));
     }.bind(this))
 }
+Win.prototype.reload = function(){
+  this.loadFromURL(this.getUrl());
+}
 Win.prototype.addEventListeners = function(){
-  this.getNode().addEventListener("click", function(e){
-    if(!this.hasFocus()){
-      this.getWorkspace().focusWindow(this);
-    }
+  this.getNode().addEventListener("window-close", function(event){
+    event.preventDefault(); event.stopPropagation();
+    this.close();
   }.bind(this))
-  this.getCloseNode().addEventListener("click", function(e){
-    e.preventDefault(); e.stopPropagation();
+  this.getNode().addEventListener("window-reload", function(event){
+    event.preventDefault(); event.stopPropagation();
+    this.reload();
+  }.bind(this))
+  this.getNode().addEventListener("click", function(event){
+      this.getWorkspace().focusWindow(this);
+  }.bind(this))
+  this.getCloseNode().addEventListener("click", function(event){
+    event.preventDefault(); event.stopPropagation();
     this.close();
   }.bind(this));
-  this.getMinimizeNode().addEventListener("click", function(e){
-    e.preventDefault(); e.stopPropagation();
+  this.getMinimizeNode().addEventListener("click", function(event){
+    event.preventDefault(); event.stopPropagation();
     this.toggleMinimize();
   }.bind(this));
-  this.getMaximizeNode().addEventListener("click", function(e){
-    e.preventDefault(); e.stopPropagation();
+  this.getMaximizeNode().addEventListener("click", function(event){
+    event.preventDefault(); event.stopPropagation();
     this.toggleMaximize();
   }.bind(this));
-  this.getNode().on("click", "form button", function(e){
-    e.preventDefault(); e.stopPropagation();
+  this.getNode().on("click", "a", function(event){
+    if(!this.hasAttribute("data-on") && this.dataset.on !== "click"){
+      event.preventDefault(); event.stopPropagation();
+      let win = this.closest('.desktop-window').win;
+      win.loadFromURL(this.href);
+    }
+  });
+  this.getNode().on("click", "form button", function(event){
+    event.preventDefault(); event.stopPropagation();
     let data = this.form.serialize();
     let params = { method: this.form.method };
     let url = this.form.action;
@@ -395,19 +422,18 @@ Win.prototype.addEventListeners = function(){
     }
     fetch(url, params)
       .then(function(res){
-        if(res.redirected){
-          location.href = res.url;
-          return;
-        }
         return res.text();
-      })
+      }.bind(this))
       .then(function(text){
         let win = this.closest('.desktop-window').win;
         win.getContentNode().innerHTML = text;
+        this.getContentNode().querySelectorAll("script").forEach(function(originalScriptNode){
+          eval(originalScriptNode.innerHTML);
+        }.bind(this));
       }.bind(this));
   });
-  this.getNode().on("submit", "form", function(e){
-    e.preventDefault(); e.stopPropagation();
+  this.getNode().on("submit", "form", function(event){
+    event.preventDefault(); event.stopPropagation();
     let data = this.serialize();
     let params = { method: this.method };
     let url = this.action;
@@ -433,6 +459,36 @@ Win.prototype.addEventListeners = function(){
       .then(function(text){
         let win = this.closest('.desktop-window').win;
         win.getContentNode().innerHTML = text;
+        win.getContentNode().querySelectorAll("script").forEach(function(originalScriptNode){
+          eval(originalScriptNode.innerHTML);
+        }.bind(win));
       }.bind(this));
+  });
+}
+let ToolStrip = function(win, node){
+  this.data = { nodes: { node: null }, Win: null };
+  this.setNode(node);
+  this.setWindow(win);
+
+  this.addEventListeners();
+}
+ToolStrip.prototype.setNode = function(node){
+  this.data.nodes.node = node;
+}
+ToolStrip.prototype.getNode = function(){
+  return this.data.nodes.node;
+}
+ToolStrip.prototype.setWindow = function(win){
+  this.data.win = win;
+}
+ToolStrip.prototype.getWindow = function(win){
+  return this.data.win;
+}
+ToolStrip.prototype.addEventListeners = function(){
+  this.getNode().find(".has-children").on("click", function(event){
+    this.classList.toggle("open");
+  });
+  this.getNode().find(".has-children").on("mouseleave", function(event){
+    this.classList.remove("open");
   });
 }

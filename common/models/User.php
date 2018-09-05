@@ -5,6 +5,7 @@ use aug\security\Security;
 use aug\models\Role;
 use aug\models\UserRole;
 class User extends \aug\security\Identity{
+  use \aug\components\traits\SoftDelete;
   protected $password;
   public static function rules(){
     return [
@@ -35,21 +36,11 @@ class User extends \aug\security\Identity{
     return true;
   }
   public function afterSave(){
-    $userRoles = UserRole::find()->where([
-      ["user_id"=>$this->id]
-      ])->all();
-    foreach($userRoles as $userRole){
-      $userRole->is_enabled = 0;
-      $userRole->save();
-    }
+    UserRole::deleteAll([
+      ["user_id" => $this->id]
+    ]);
     foreach($this->roles_list as $roleId){
-      $userRole = UserRole::find()->where([
-        ["user_id"=>$this->id],
-        ["role_id"=>$roleId]
-      ])->one();
-      if(empty($userRole)){
-        $userRole = new UserRole();
-      }
+      $userRole = new UserRole();
       $userRole->user_id = $this->id;
       $userRole->role_id = $roleId;
       $userRole->is_enabled = 1;
@@ -76,7 +67,7 @@ class User extends \aug\security\Identity{
     $roles = $this->getRoles();
     $out = [];
     foreach($roles as $role){
-      $out[$role->role_id] = $role->name;
+      $out[$role->role_id] = $role->id;
     }
     return $out;
   }

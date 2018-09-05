@@ -1,6 +1,7 @@
 <?php
 namespace aug\models;
 class Role extends \aug\db\Record{
+  use \aug\components\traits\SoftDelete;
   public static function tableName(){
     return "role";
   }
