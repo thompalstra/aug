@@ -60,6 +60,9 @@ Workspace.prototype.addWindow = function(win){
   this.getWindowsMap().set(win.getIdentifier(), win);
   return win;
 }
+Workspace.prototype.openDialog = function(url){
+  let dialog = new Dialog(this, url);
+}
 Workspace.prototype.openWindow = function(url){
   let identifier = this.createIdentifier(url);
   let win = this.addWindow(new Win(this, identifier));
@@ -335,6 +338,7 @@ Win.prototype.toggleMaximize = function(e){
     this.setMaximized(true);
   } else {
     let node = this.getNode();
+    console.log(this.data.previousSize.getPosition());
     node.style.left = this.data.previousSize.getPosition().getX() + "px";
     node.style.top = this.data.previousSize.getPosition().getY() + "px";
     node.style.width = this.data.previousSize.getSize().getWidth() + "px";
@@ -352,9 +356,9 @@ Win.prototype.focusOut = function(){
   this.getNode().classList.remove("focus");
 }
 Win.prototype.loadFromURL = function(url){
-  this.setUrl(url);
-  return fetch(url)
+  return fetch(url, { referrer: this.getUrl() })
     .then(function(res){
+      this.setUrl(res.url);
       return res.text();
     }.bind(this))
     .then(function(text){
@@ -469,7 +473,6 @@ let ToolStrip = function(win, node){
   this.data = { nodes: { node: null }, Win: null };
   this.setNode(node);
   this.setWindow(win);
-
   this.addEventListeners();
 }
 ToolStrip.prototype.setNode = function(node){
@@ -490,5 +493,158 @@ ToolStrip.prototype.addEventListeners = function(){
   });
   this.getNode().find(".has-children").on("mouseleave", function(event){
     this.classList.remove("open");
+  });
+}
+let Dialog = function(Workspace, href){
+  this.data = { nodes: { node: null, backdrop: null }, Workspace: null };
+  this.setWorkspace(Workspace);
+  this.setNode(document.createElement("div"));
+  this.setBackdropNode(document.createElement("div"));
+  this.addEventListeners();
+  return this.loadFromURL(href)
+    .then(function(){
+    }.bind(this));
+}
+Dialog.prototype.setNode = function(node){
+  this.data.nodes.node = node;
+  this.getNode().Dialog = this;
+  this.getWorkspace().getNode().appendChild(this.getNode());
+  this.getNode().classList.add("dialog-default");
+}
+Dialog.prototype.getNode = function(){
+  return this.data.nodes.node;
+}
+Dialog.prototype.setBackdropNode = function(node){
+  this.data.nodes.backdrop = node;
+  this.getBackdropNode().insertAfter(this.getNode());
+  this.getBackdropNode().classList.add("dialog-backdrop");
+}
+Dialog.prototype.getBackdropNode = function(){
+  return this.data.nodes.backdrop;
+}
+Dialog.prototype.setWorkspace = function(Workspace){
+  this.data.Workspace = Workspace;
+}
+Dialog.prototype.getWorkspace = function(){
+  return this.data.Workspace;
+}
+Dialog.prototype.loadFromURL = function(url){
+  return fetch(url)
+    .then(function(res){
+      if(res.redirected){
+        location.href = res.url;
+      } else {
+        return res.text();
+      }
+    }.bind(this))
+    .then(function(text){
+      this.getNode().innerHTML = text;
+      this.getNode().querySelectorAll("script").forEach(function(originalScriptNode){
+        eval(originalScriptNode.innerHTML);
+      }.bind(this));
+      this.getNode().do("dialog-show");
+    }.bind(this));
+}
+Dialog.prototype.addEventListeners = function(){
+  this.getNode().on("dialog-show", function(event){
+    event.preventDefault(); event.stopPropagation();
+    this.getNode().classList.add("open");
+  }.bind(this))
+  this.getNode().on("dialog-hide", function(event){
+    event.preventDefault(); event.stopPropagation();
+    this.getBackdropNode().remove();
+    this.getNode().remove();
+  }.bind(this));
+  this.getBackdropNode().on("click", function(event){
+    this.getNode().do("dialog-hide");
+  }.bind(this));
+  this.getNode().on("click", "a", function(event){
+    if(!this.hasAttribute("data-on") && this.dataset.on !== "click"){
+      event.preventDefault(); event.stopPropagation();
+      let Dialog = this.closest('.dialog-default').Dialog;
+      Dialog.loadFromURL(this.href);
+    }
+  });
+  this.getNode().on("click", "form button[type='submit']", function(event){
+    event.preventDefault(); event.stopPropagation();
+    let data = this.form.serialize();
+    let params = { method: this.form.method };
+    let url = this.form.action;
+    if(this.form.method.toLowerCase() == "get"){
+      if(url.indexOf("?") !== -1){
+        url = url.substring(0, url.indexOf("?"))
+      }
+      url += "?" + data;
+      if(this.name.length > 0){
+        url += "&" + encodeURI(this.name) + "=" + encodeURI(this.value);
+      }
+    } else {
+      if(this.name.length > 0){
+        data += "&" + encodeURI(this.name) + "=" + encodeURI(this.value);
+      }
+      params.body = data;
+      params.headers = new Headers({
+        'Content-Type': 'application/x-www-form-urlencoded'
+      });
+    }
+    fetch(url, params)
+      .then(function(res){
+        return new Promise(function(resolve, reject){
+          if(res.redirected){
+            location.href = res.url;
+            reject("Cancelled promise due to redirect");
+          } else {
+            resolve(res.text());
+          }
+        }.bind(this));
+      }.bind(this))
+      .then(function(text){
+        let Dialog = this.closest('.dialog-default').Dialog;
+        Dialog.getNode().innerHTML = text;
+        Dialog.getNode().querySelectorAll("script").forEach(function(originalScriptNode){
+          eval(originalScriptNode.innerHTML);
+        }.bind(this));
+      }.bind(this))
+      .catch(function(e){
+        console.info(e);
+      });
+  });
+  this.getNode().on("submit", "form", function(event){
+    event.preventDefault(); event.stopPropagation();
+    let data = this.serialize();
+    let params = { method: this.method };
+    let url = this.action;
+    if(this.method.toLowerCase() == "get"){
+      if(url.indexOf("?") !== -1){
+        url = url.substring(0, url.indexOf("?"))
+      }
+      url += "?" + data;
+    } else {
+      params.body = data;
+      params.headers = new Headers({
+        'Content-Type': 'application/x-www-form-urlencoded'
+      });
+    }
+    fetch(url, params)
+      .then(function(res){
+        return new Promise(function(resolve, reject){
+          if(res.redirected){
+            location.href = res.url;
+            reject("Cancelled promise due to redirect");
+          } else {
+            resolve(res.text());
+          }
+        }.bind(this));
+      })
+      .then(function(text){
+        let Dialog = this.closest('.dialog-default').Dialog;
+        Dialog.getNode().innerHTML = text;
+        Dialog.getNode().querySelectorAll("script").forEach(function(originalScriptNode){
+          eval(originalScriptNode.innerHTML);
+        }.bind(win));
+      }.bind(this))
+      .catch(function(e){
+        console.info(e);
+      });
   });
 }

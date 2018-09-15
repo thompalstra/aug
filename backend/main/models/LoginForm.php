@@ -20,6 +20,7 @@ class LoginForm extends \aug\base\Model{
       \Aug::$app->user->login($user);
       return true;
     }
+    $this->addError("password", "Incorrect credentials");
     return false;
   }
 }

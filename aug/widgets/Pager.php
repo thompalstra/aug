@@ -51,6 +51,9 @@ class Pager extends \aug\base\Widget{
     if($endOffset > $totalCount / $pageSize){
       $endOffset = ceil($totalCount / $pageSize);
     }
+    if($endOffset == 0){
+      $endOffset = 1;
+    }
 
 
     $uri = $_SERVER["REQUEST_URI"];
@@ -67,24 +70,12 @@ class Pager extends \aug\base\Widget{
         "class" => ($currentPage == 1) ? ["current"] : []
       ];
     }
-    // if($this->next && $startPage > $startOffset){
-    //   $items[$this->previousText] = [
-    //     "href" => Request::toUrl([$uri, ["page" => ($currentPage-1), "page-size" => $pageSize] + $params]),
-    //     "class" => ($currentPage == ($currentPage-1)) ? ["current"] : []
-    //   ];
-    // }
     foreach(range($startOffset, $endOffset) as $pageNumber){
       $items[$pageNumber] = [
         "href" => Request::toUrl([$uri, ["page" => $pageNumber, "page-size" => $pageSize] + $params]),
         "class" => ($currentPage == $pageNumber) ? ["current"] : []
       ];
     }
-    // if($this->previous && $currentPage < $lastPage){
-    //   $items[$this->nextText] = [
-    //     "href" => Request::toUrl([$uri, ["page" => ($currentPage+1), "page-size" => $pageSize] + $params]),
-    //     "class" => ($currentPage == ($currentPage+1)) ? ["current"] : []
-    //   ];
-    // }
     if($this->last){
       $items[$this->lastText] = [
         "href" => Request::toUrl([$uri, ["page" => ($lastPage), "page-size" => $pageSize] + $params]),

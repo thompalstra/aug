@@ -2,6 +2,7 @@
 use aug\widgets\Form;
 use aug\helpers\Html;
 $form = new Form();
+
 ?>
 
 <?=$form->begin([
@@ -19,12 +20,21 @@ $form = new Form();
     </div>
   </div>
 </div>
-<div class="button-row row-rtl" style="padding: 0 .5rem">
-  <?=Html::button("switch", [
-      "class" => ["btn", "btn-default", "success"]
+<div class="row-rtl" style="padding: .5rem">
+  <?=Html::button("OK", [
+    "type" => "submit",
+    "class" => ["btn", "btn-dialog", "success"]
+  ])?>
+  <?=Html::button("CANCEL", [
+      "class" => ["btn", "btn-dialog", "success"],
+      "data-on" => "click",
+      "data-do" => [
+        "action" => "dialog-hide",
+        "params" => []
+      ],
   ])?>
 </div>
 <?=$form->end()?>
 <script>
-  this.setTitle("<i class='material-icons'>compare_arrows</i>&nbsp;Switch user");
+  //this.setTitle("<i class='material-icons'>compare_arrows</i>&nbsp;Switch user");
 </script>

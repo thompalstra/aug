@@ -1,0 +1,20 @@
+.dialog-default{
+  box-shadow: var(--bs-8dp);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  z-index: 500;
+}
+
+.dialog-default + .dialog-backdrop{
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,.9);
+  z-index: 400;
+}
+
+.dialog-default.open + .dialog-backdrop{
+
+}

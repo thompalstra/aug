@@ -7,7 +7,7 @@ class Form extends \aug\base\Widget{
     "class" => ["form form-default"],
     "method" => "POST"
   ];
-  protected $layout = "{rowStart}{label}{controlRowStart}{control}{controlRowEnd}{errors}{rowEnd}";
+  protected $layout = "{rowStart}{label}{controlRowStart}{control}{controlRowEnd}{rowEnd}{errors}";
 
   public $rowOptions = [
     "class" => ["form-row"]

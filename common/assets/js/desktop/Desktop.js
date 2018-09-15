@@ -62,13 +62,17 @@ Desktop.prototype.addEventListeners = function(){
     }
   });
   this.getNode().on("open-window", function(event){
+    this.getTaskbar().closeMenu();
     if(typeof event.data === "undefined"){ throw Error("Missing 'data' attributes") }
     if(typeof event.data.href === "undefined"){ throw Error("Missing 'href' attribute") }
     this.getWorkspace().openWindow(event.data.href);
   }.bind(this));
-  this.getNode().on("focus-window", function(event){
-
-  })
+  this.getNode().on("open-dialog", function(event){
+    this.getTaskbar().closeMenu();
+    if(typeof event.data === "undefined"){ throw Error("Missing 'data' attributes") }
+    if(typeof event.data.href === "undefined"){ throw Error("Missing 'href' attribute") }
+    this.getWorkspace().openDialog(event.data.href);
+  }.bind(this))
   this.getNode().on("open-context", function(event){
       contextMenu = new ContextMenu(this, event);
       contextMenu.getNode().style.left = (event.data.originalEvent.pageX - 5) + "px";
@@ -96,7 +100,7 @@ Desktop.prototype.onHandler = function(event){
     });
     target.dispatchEvent(customEvent);
   } else {
-    throw Error("Invalid target specified in data attributes 'target'.");
+    throw Error("Invalid target specified in data attribute 'target'.");
   }
 }
 
@@ -179,6 +183,8 @@ ContextMenu.prototype.close = function(){
 }
 var Position = function(x, y){
   this.data = { x: null, y: null };
+  this.setX(x);
+  this.setY(y);
 }
 Position.prototype.setX = function(x){
   this.data.x = x;
@@ -186,10 +192,10 @@ Position.prototype.setX = function(x){
 Position.prototype.getX = function(x){
   return this.data.x;
 }
-Position.prototype.setY = function(x){
+Position.prototype.setY = function(y){
   this.data.y = y;
 }
-Position.prototype.getY = function(x){
+Position.prototype.getY = function(y){
   return this.data.y;
 }
 var Size = function(width, height){

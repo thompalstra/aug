@@ -22,6 +22,7 @@ class FormField extends \aug\base\Widget{
   public function getLabel($attributes = []){
     $model = $this->model;
     $attribute = $this->attribute;
+    $attributes["for"] = $this->inputId;
     return Html::tag("label", $model::getAttributeLabel($attribute), $attributes);
   }
   public function getErrors($attributes = []){
@@ -80,6 +81,7 @@ class FormField extends \aug\base\Widget{
     $attributes["type"] = "checkbox";
 
     if(!isset($attributes["name"]))         {   $attributes["name"] = $this->inputName;   }
+    if(!isset($attributes["id"]))           {   $attributes['id'] = $this->inputId;       }
     if($this->attributeValue == true)       {   $attributes["checked"] = "";              }
 
     return $this->createLayout(Html::checkboxInput($attributes));
@@ -87,6 +89,7 @@ class FormField extends \aug\base\Widget{
   public function selectInput($options = [], $attributes = []){
 
     if(!isset($attributes["name"]))         {   $attributes["name"] = $this->inputName;   }
+    if(!isset($attributes["id"]))           {   $attributes['id'] = $this->inputId; }
 
     return $this->createLayout(Html::select($options, $this->attributeValue, $attributes));
   }

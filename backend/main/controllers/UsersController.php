@@ -78,7 +78,7 @@ class UsersController extends \aug\web\Controller{
         $model->delete();
       }
     }
-    return $this->redirect("/users");
+    return $this->redirect(isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "/users");
   }
   protected function getModel($id = null){
     if(!empty($id)){

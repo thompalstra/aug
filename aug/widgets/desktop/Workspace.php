@@ -20,6 +20,9 @@ class Workspace extends \aug\base\Widget{
   public function createItems($items = []){
     $out = [];
     foreach($items as $item){
+      if(empty($item)){
+        continue;
+      }
       $attributes = $this->itemAttributes;
       if(isset($item["attributes"])){
         $attributes = $item["attributes"];

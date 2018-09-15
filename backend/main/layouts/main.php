@@ -33,7 +33,7 @@ BackendAsset::register();
               ],
             ]
           ],
-          [
+          \Aug::$app->user->can("siteIndex") ? [
             "icon" => "<i class='material-icons'>list</i>",
             "label" => "Sites",
             "attributes" => [
@@ -43,12 +43,11 @@ BackendAsset::register();
                 "action" => "open-window",
                 "params" => [
                   "href" => "/sites",
-                  // "title" => "<i class='material-icons'>list</i>&nbsp;Sites"
                 ]
               ],
             ]
-          ],
-          [
+          ] : [],
+          \Aug::$app->user->can("pageIndex") ? [
             "icon" => "<i class='material-icons'>pageview</i>",
             "label" => "Pages",
             "attributes" => [
@@ -58,12 +57,11 @@ BackendAsset::register();
                 "action" => "open-window",
                 "params" => [
                   "href" => "/pages",
-                  // "title" => "<i class='material-icons'>pageview</i>&nbsp;Pages"
                 ]
               ],
             ]
-          ],
-          [
+          ] : [],
+          \Aug::$app->user->can("roleIndex") ? [
             "icon" => "<i class='material-icons'>security</i>",
             "label" => "Roles",
             "attributes" => [
@@ -73,11 +71,10 @@ BackendAsset::register();
                 "action" => "open-window",
                 "params" => [
                   "href" => "/roles",
-                  // "title" => "<i class='material-icons'>security</i>&nbsp;Roles"
                 ]
               ],
             ]
-          ],
+          ] : [],
           [
             "content" => \common\widgets\DesktopCountWidget::widget(),
             "attributes" => [
@@ -109,7 +106,7 @@ BackendAsset::register();
                       "class" => ["nav-item"],
                       "data-on" => "click",
                       "data-do" => [
-                        "action" => "open-window",
+                        "action" => "open-dialog",
                         "params" => [
                           "href" => "/site/switch-user",
                         ]
@@ -118,20 +115,26 @@ BackendAsset::register();
                   ],
                   [
                     "label" => "<i class='material-icons'>exit_to_app</i>&nbsp;Log off",
-                    "url" => "/site/logout",
                     "attributes" => [
-                      "class" => ["nav-item"]
+                      "class" => ["nav-item"],
+                      "data-on" => "click",
+                      "data-do" => [
+                        "action" => "open-dialog",
+                        "params" => [
+                          "href" => "/site/logout",
+                        ]
+                      ]
                     ]
                   ]
                 ]
               ],
-              [
+              \Aug::$app->user->can("userIndex") || \Aug::$app->user->can("roleIndex") ? [
                 "label" => "Users",
                 "attributes" => [
                   "class" => ["nav-item"]
                 ],
                 "items" => [
-                  [
+                  \Aug::$app->user->can("userIndex") ? [
                     "label" => "<i class='material-icons'>account_circle</i>&nbsp;Users",
                     "attributes" => [
                       "class" => ["nav-item"],
@@ -140,12 +143,11 @@ BackendAsset::register();
                         "action" => "open-window",
                         "params" => [
                           "href" => "/users",
-                          // "title" => "<i class='material-icons'>account_circle</i>&nbsp;Users"
                         ]
                       ]
                     ]
-                  ],
-                  [
+                  ] : [],
+                  \Aug::$app->user->can("roleIndex") ? [
                     "label" => "<i class='material-icons'>security</i>&nbsp;Roles",
                     "attributes" => [
                       "class" => ["nav-item"],
@@ -154,20 +156,19 @@ BackendAsset::register();
                         "action" => "open-window",
                         "params" => [
                           "href" => "/roles",
-                          // "title" => "<i class='material-icons'>security</i>&nbsp;Roles"
                         ]
                       ]
                     ]
-                  ]
+                  ] : []
                 ]
-              ],
-              [
+              ] : [],
+              \Aug::$app->user->can("siteIndex") || \Aug::$app->user->can("pageIndex") ? [
                 "label" => "CMS",
                 "attributes" => [
                   "class" => ["nav-item"]
                 ],
                 "items" => [
-                  [
+                  \Aug::$app->user->can("siteIndex") ? [
                     "label" => "<i class='material-icons'>list</i>&nbsp;Sites",
                     "attributes" => [
                       "class" => ["nav-item"],
@@ -176,12 +177,11 @@ BackendAsset::register();
                         "action" => "open-window",
                         "params" => [
                           "href" => "/sites",
-                          // "title" => "<i class='material-icons'>list</i>&nbsp;Sites"
                         ]
                       ]
                     ]
-                  ],
-                  [
+                  ] : [],
+                  \Aug::$app->user->can("pageIndex") ? [
                     "label" => "<i class='material-icons'>pageview</i>&nbsp;Pages",
                     "attributes" => [
                       "class" => ["nav-item"],
@@ -190,13 +190,12 @@ BackendAsset::register();
                         "action" => "open-window",
                         "params" => [
                           "href" => "/pages",
-                          // "title" => "<i class='material-icons'>pageview</i>&nbsp;Pages"
                         ]
                       ]
                     ]
-                  ],
+                  ] : [],
                 ]
-              ]
+              ] : []
             ],
 
           ],

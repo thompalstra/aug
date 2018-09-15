@@ -40,6 +40,7 @@
   height: 100%;
   width: 100%;
   overflow: hidden;
+  font-size: 14px;
 }
 /**ITEMS**/
 .desktop.desktop-default .desktop-workspace{
@@ -120,6 +121,10 @@
   -ms-user-select: none;      /* IE 10+ */
   user-select: none;          /* Likely future */
 }
+.desktop.desktop-default .shortcut label,
+.desktop.desktop-default .shortcut .material-icons{
+  cursor: inherit;
+}
 .desktop.desktop-default .shortcut:hover{
   background: rgba(255,255,255,.3);
   border: 1px solid rgba(0,0,0,0);
@@ -144,7 +149,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
 }
 
 .desktop-taskbar .nav-item.tray{
@@ -158,9 +162,9 @@
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  position: fixed;
-  top: 0;
-  bottom: 0;
+  position: absolute;
+  bottom: 100%;
+  left: 0;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -168,8 +172,11 @@
   background: var(--desktop-taskbar-bg);
   color: var(--desktop-taskbar-fg);
 }
-
-
+.desktop-taskbar .nav-item.open > ul{
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
 .desktop-taskbar .nav-item.home ul{
   left: 0;
 }
@@ -192,6 +199,7 @@
 .desktop-taskbar .nav-item.home li ul{
   position: absolute;
   left: 100%;
+  bottom: 0;
 }
 .desktop-taskbar .nav-item.tray li ul{
   position: absolute;
@@ -201,18 +209,15 @@
   right: 0;
 }
 .desktop-taskbar .nav-item.has-children{
-
-}
-.desktop-taskbar .nav-item.open > ul{
-  opacity: 1;
-  visibility: visible;
-  pointer-events: all;
 }
 .desktop-taskbar .nav-item{
+  position: relative;
   background: var(--desktop-taskbar-items-bg);
   color: var(--desktop-taskbar-items-fg);
+  cursor: pointer;
 }
 .desktop-taskbar .nav-item:not(.tasks):hover,
+.desktop-taskbar .nav-item:not(.tasks).open,
 .desktop-taskbar .nav-item.tasks .taskbar-task:hover{
   background: rgba(255,255,255,.05);
 }
@@ -220,15 +225,19 @@
 .desktop-taskbar .nav-item.tasks .taskbar-task.focus{
   background-color: rgba(255,255,255,.2);
 }
-.desktop-taskbar .nav-item.home .nav-item:after{
+/* .desktop-taskbar .nav-item.home .nav-item:after{
   content: "•";
   font-family: "Material Icons";
   color: #fff;
   opacity: .2;
   padding: .5rem;
-}
+} */
 .desktop-taskbar .nav-item.home .nav-item.has-children:after{
   content: "keyboard_arrow_right";
+  font-family: "Material Icons";
+  color: #fff;
+  opacity: .2;
+  padding: .5rem;
 }
 .desktop-taskbar .nav-item.home .nav-item:hover:after{
   opacity: .5;
@@ -345,6 +354,7 @@
   flex-direction: row;
   flex-wrap: nowrap;
   list-style: none;
+  font-size: 12px;
 }
 
 .desktop.desktop-default .toolstrip,
@@ -368,7 +378,7 @@
 .desktop.desktop-default .toolstrip span{
   display: inline-block;
   flex: 1;
-  padding: 8px 10px;
+  padding: 5px;
 }
 .desktop.desktop-default .toolstrip ul{
   position: absolute;

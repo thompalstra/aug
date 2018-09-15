@@ -1,9 +1,16 @@
-console.log("dom");
+// console.log("dom");
 Node.prototype.find = function(q){
   return this.querySelectorAll(q);
 }
 Node.prototype.one = function(q){
   return this.querySelector(q);
+}
+Node.prototype.insertAfter = function(referenceNode){
+  if(referenceNode.nextSibling){
+    referenceNode.parentNode.insertBefore(this, referenceNode.nextSibling);
+  } else {
+    referenceNode.parentNode.appendChild(this);
+  }
 }
 Node.prototype.on = function(eventTypes, a, b, c){
   let target = this;
