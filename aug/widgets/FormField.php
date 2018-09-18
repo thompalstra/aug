@@ -60,19 +60,21 @@ class FormField extends \aug\base\Widget{
   }
   public function textInput($attributes = []){
     $attributes["type"] = "text";
+    $model = $this->model;
 
     if(!isset($attributes["name"]))         {   $attributes["name"] = $this->inputName;                                         }
     if(!isset($attributes["value"]))        {   $attributes["value"] = $this->attributeValue;                                   }
-    if(!isset($attributes["placeholder"]))  {   $attributes["placeholder"] = $this->model::getAttributeLabel($this->attribute); }
+    if(!isset($attributes["placeholder"]))  {   $attributes["placeholder"] = $model::getAttributeLabel($this->attribute); }
     if(!isset($attributes["id"]))           {   $attributes["id"] = $this->inputId;                                             }
     return $this->createLayout(Html::input($attributes));
   }
   public function passwordInput($attributes = []){
     $attributes["type"] = "password";
+    $model = $this->model;
 
     if(!isset($attributes["name"]))         {   $attributes["name"] = $this->inputName;                                         }
     if(!isset($attributes["value"]))        {   $attributes["value"] = $this->attributeValue;                                   }
-    if(!isset($attributes["placeholder"]))  {   $attributes["placeholder"] = $this->model::getAttributeLabel($this->attribute); }
+    if(!isset($attributes["placeholder"]))  {   $attributes["placeholder"] = $model::getAttributeLabel($this->attribute); }
     if(!isset($attributes["id"]))           {   $attributes["id"] = $this->inputId;                                             }
 
     return $this->createLayout(Html::input($attributes));
