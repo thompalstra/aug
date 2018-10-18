@@ -23,15 +23,16 @@ class DataProvider{
       $this->_offset = $this->pagination["page"] * $this->pagination["pageSize"] - $this->pagination["pageSize"];
     }
 
+    if($this->_offset >= $this->_totalCount){
+      $this->_offset -= $this->getPageSize();
+    }
+
     if($this->_offset < 0){
       $this->_offset = 0;
-    } else if($this->_offset >= $this->_totalCount){
-      $this->_offset -= $this->getPageSize();
     }
 
     $this->_limit = $this->_offset + $this->pagination["pageSize"];
     $this->_totalCount = $this->query->count();
-
     $this->query->limit($this->getPageSize());
     $this->query->offset($this->getOffset());
   }
